@@ -108,6 +108,8 @@ public class PlayerListener extends ListenerFrame {
                     player.setSaturation(new_SaturationLevel);
                     player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EAT, 10, 2);
 
+                    usedItem.setAmount(usedItem.getAmount() - 1);
+
                     endEat(player);
                 }
 
