@@ -1,0 +1,8 @@
+name: FastEat
+main: xyz.sk7z.fasteat.FastEat
+version: ${project.version}
+depend: [EcoFramework]
+commands:
+  ece:
+    description: fasteat command.
+    usage: /<command> xxx

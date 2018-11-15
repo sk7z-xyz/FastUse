@@ -105,7 +105,7 @@ public class PlayerListener extends ListenerFrame {
                     player.setFoodLevel(new_FoodLevel);
                     player.setSaturation(new_SaturationLevel);
                     player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EAT, 10, 2);
-                    
+
                     endEat(player);
                 }
 
