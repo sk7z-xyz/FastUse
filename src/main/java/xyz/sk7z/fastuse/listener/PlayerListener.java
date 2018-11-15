@@ -18,6 +18,7 @@ import xyz.sk7z.fastuse.Food.FoodList;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Date;
 import java.util.HashMap;
 
 
@@ -66,6 +67,7 @@ public class PlayerListener extends ListenerFrame {
 
         ItemStack chestplate_Item = player.getInventory().getChestplate();
         ItemStack usedItem = event.getItem();
+        //player.sendMessage("イベントが呼ばれた" + new Date());
 
         if (chestplate_Item != null && usedItem != null) {
             if (player.getInventory().getChestplate().getType() == Material.ELYTRA && event.getItem().getType() == Material.FIREWORK_ROCKET) {
@@ -82,11 +84,11 @@ public class PlayerListener extends ListenerFrame {
 
             if (isHungry(player)) {
 
+                event.setCancelled(true);
                 player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EAT, 10, 1);
 
                 if (canEat(player)) {
 
-                    event.setCancelled(true);
 
                     Food food = foodList.getFood(usedItem.getType());
 
@@ -117,12 +119,12 @@ public class PlayerListener extends ListenerFrame {
     }
 
     public boolean isHungry(Player player) {
-        return player.getFoodLevel() >= 20;
+        return player.getFoodLevel() < 20;
     }
 
 
     public boolean canEat(Player player) {
-        if (isHungry(player)) {
+        if (!isHungry(player)) {
             return false;
         }
 

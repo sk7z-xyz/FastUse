@@ -4,7 +4,7 @@ import jp.minecraftuser.ecoframework.PluginFrame;
 import org.bukkit.entity.Player;
 import xyz.sk7z.fastuse.listener.PlayerListener;
 
-public class FaseUse extends PluginFrame {
+public class FastUse extends PluginFrame {
 
     private static Player getter = null;
     

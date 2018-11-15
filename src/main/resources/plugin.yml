@@ -1,8 +1,8 @@
-name: FastEat
-main: xyz.sk7z.fasteat.FastEat
+name: FastUse
+main: xyz.sk7z.fastuse.FastUse
 version: ${project.version}
 depend: [EcoFramework]
 commands:
   ece:
-    description: fasteat command.
+    description: fastuse command.
     usage: /<command> xxx
