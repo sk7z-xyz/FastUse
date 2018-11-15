@@ -67,15 +67,23 @@ public class PlayerListener extends ListenerFrame {
 
         ItemStack chestplate_Item = player.getInventory().getChestplate();
         ItemStack usedItem = event.getItem();
-        //player.sendMessage("イベントが呼ばれた" + new Date());
 
-        if (chestplate_Item != null && usedItem != null) {
-            if (player.getInventory().getChestplate().getType() == Material.ELYTRA && event.getItem().getType() == Material.FIREWORK_ROCKET) {
-                Location l = player.getLocation();
-                if (!player.isOnGround()) {
-                    player.teleport(l);
+        //player.sendMessage("イベントが呼ばれた" + new Date());
+        //player.chat("FoodLevel:"+player.getFoodLevel());
+        //player.chat("SaturationLevel:"+player.getSaturation());
+
+        //すでに開いてるなら実行しない
+        if (!player.isGliding()) {
+            if (chestplate_Item != null && usedItem != null) {
+                if (player.getInventory().getChestplate().getType() == Material.ELYTRA && event.getItem().getType() == Material.FIREWORK_ROCKET) {
+                    Location l = player.getLocation();
+                    //もし空中にいるならその場所にテレポートしてからエリトラを開く(落下死対策)
+                    if (!player.isOnGround()) {
+                        player.teleport(l);
+                    }
+                    //player.chat("----エリトラ展開----");
+                    player.setGliding(true);
                 }
-                player.setGliding(true);
             }
         }
 
@@ -133,6 +141,7 @@ public class PlayerListener extends ListenerFrame {
         player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EAT, 10, 1);
         if (player_eat_time_list.containsKey(player)) {
             Instant eat_time = player_eat_time_list.get(player);
+            //食べ始めてから30秒立ってたら拒否
             if (ChronoUnit.SECONDS.between(eat_time, Instant.now()) >= 30f) {
                 endEat(player);
                 return false;
@@ -147,7 +156,6 @@ public class PlayerListener extends ListenerFrame {
     public void setEatStartTime(Player player) {
         player_eat_time_list.put(player, Instant.now());
     }
-
     public void endEat(Player player) {
         player_eat_time_list.remove(player);
     }
