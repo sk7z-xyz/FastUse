@@ -10,6 +10,7 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
@@ -19,7 +20,6 @@ import xyz.sk7z.fastuse.Food.FoodList;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
-
 
 /**
  * プレイヤー系イベントリスナクラス
@@ -54,7 +54,6 @@ public class PlayerListener extends ListenerFrame {
      */
 
 
-
     @EventHandler(priority = EventPriority.LOW)
     public void PlayerItemConsume(PlayerItemConsumeEvent event) {
         if (foodList.isFood(event.getItem().getType()))
@@ -66,9 +65,12 @@ public class PlayerListener extends ListenerFrame {
     public void PlayerInteract(PlayerInteractEvent event) {
 
         Player player = event.getPlayer();
-
         ItemStack chestplate_Item = player.getInventory().getChestplate();
         ItemStack usedItem = event.getItem();
+        if(event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK){
+            return;
+        }
+
 
         //player.sendMessage("イベントが呼ばれた" + new Date());
         //player.chat("FoodLevel:"+player.getFoodLevel());
@@ -88,7 +90,6 @@ public class PlayerListener extends ListenerFrame {
                 }
             }
         }
-
 
 
         if (usedItem != null && (foodList.isFood(usedItem.getType()))) {
