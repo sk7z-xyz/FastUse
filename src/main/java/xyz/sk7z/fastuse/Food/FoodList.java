@@ -44,7 +44,7 @@ public class FoodList {
             plg.getLogger().log(Level.WARNING, "food.csvの読み込みに失敗");
         }
     }
-
+    //FastUseで食べれる食料ならならtrueを返す
     public boolean isFood(Material material) {
         return foodlists.containsKey(material + "");
     }

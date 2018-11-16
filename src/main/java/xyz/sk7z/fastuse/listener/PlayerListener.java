@@ -18,7 +18,6 @@ import xyz.sk7z.fastuse.Food.FoodList;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
 import java.util.HashMap;
 
 
@@ -54,10 +53,13 @@ public class PlayerListener extends ListenerFrame {
      * @param event
      */
 
+
+
     @EventHandler(priority = EventPriority.LOW)
     public void PlayerItemConsume(PlayerItemConsumeEvent event) {
         if (foodList.isFood(event.getItem().getType()))
             event.setCancelled(true);
+
     }
 
     @EventHandler(priority = EventPriority.LOW)
@@ -86,6 +88,7 @@ public class PlayerListener extends ListenerFrame {
                 }
             }
         }
+
 
 
         if (usedItem != null && (foodList.isFood(usedItem.getType()))) {
@@ -156,6 +159,7 @@ public class PlayerListener extends ListenerFrame {
     public void setEatStartTime(Player player) {
         player_eat_time_list.put(player, Instant.now());
     }
+
     public void endEat(Player player) {
         player_eat_time_list.remove(player);
     }

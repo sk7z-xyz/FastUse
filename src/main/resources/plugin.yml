@@ -3,6 +3,6 @@ main: xyz.sk7z.fastuse.FastUse
 version: ${project.version}
 depend: [EcoFramework]
 commands:
-  ece:
+  fastuse:
     description: fastuse command.
-    usage: /<command> xxx
+    usage: /<command> 虚無
