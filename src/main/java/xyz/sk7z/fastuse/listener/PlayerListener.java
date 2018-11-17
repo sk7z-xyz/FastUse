@@ -67,7 +67,8 @@ public class PlayerListener extends ListenerFrame {
         Player player = event.getPlayer();
         ItemStack chestplate_Item = player.getInventory().getChestplate();
         ItemStack usedItem = event.getItem();
-        if(event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK){
+        //右クリック以外は無視
+        if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK) {
             return;
         }
 
@@ -76,15 +77,12 @@ public class PlayerListener extends ListenerFrame {
         //player.chat("FoodLevel:"+player.getFoodLevel());
         //player.chat("SaturationLevel:"+player.getSaturation());
 
-        //すでに開いてるなら実行しない
-        if (!player.isGliding()) {
+        //エリトラを開いていなくてかつ 空中にいる場合のみ実行する
+        if (!player.isGliding() && !player.isOnGround()) {
             if (chestplate_Item != null && usedItem != null) {
                 if (player.getInventory().getChestplate().getType() == Material.ELYTRA && event.getItem().getType() == Material.FIREWORK_ROCKET) {
                     Location l = player.getLocation();
-                    //もし空中にいるならその場所にテレポートしてからエリトラを開く(落下死対策)
-                    if (!player.isOnGround()) {
-                        player.teleport(l);
-                    }
+                    player.teleport(l);
                     //player.chat("----エリトラ展開----");
                     player.setGliding(true);
                 }
