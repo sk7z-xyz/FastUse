@@ -12,8 +12,8 @@ import java.util.HashMap;
 import java.util.logging.Level;
 
 public class FoodList {
-    public HashMap<String, Food> foodlists;
-    Plugin plg = null;
+    private HashMap<String, Food> foodlists;
+    private Plugin plg;
 
     public FoodList(Plugin _plg) {
         this.plg = _plg;
@@ -30,7 +30,7 @@ public class FoodList {
                     int food_points = Integer.valueOf(tmp[1]);
                     float saturation_restored = Float.valueOf(tmp[2]);
                     foodlists.put(name, new Food(name, food_points, saturation_restored));
-                    plg.getLogger().log(Level.WARNING, name + foodlists.get(name).getFood_points() + "");
+                    //plg.getLogger().log(Level.WARNING, name + foodlists.get(name).getFood_points() + "");
 
                 } catch (NumberFormatException e) {
 
@@ -44,6 +44,7 @@ public class FoodList {
             plg.getLogger().log(Level.WARNING, "food.csvの読み込みに失敗");
         }
     }
+
     //FastUseで食べれる食料ならならtrueを返す
     public boolean isFood(Material material) {
         return foodlists.containsKey(material + "");
