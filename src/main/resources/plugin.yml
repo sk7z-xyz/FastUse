@@ -4,6 +4,22 @@ version: ${project.version}
 api-version: 1.13
 depend: [EcoFramework]
 commands:
-  fastuse:
+  fu:
     description: fastuse command.
-    usage: /<command> 虚無
+    usage: /<command> [GLIDE,EAT] [ON/OFF]
+    permission: fastuse.*
+    default: true
+  fu glide:
+    description: fastuse command.
+    usage: /<command> glide [ON/OFF]
+    permission:
+      fastuse.*
+      fastuse.glide
+    default: true
+  fu eat:
+    description: fastuse command.
+    usage: /<command> eat [ON/OFF]
+    permission:
+      fastuse.*
+      fasetuser.eat
+    default: true

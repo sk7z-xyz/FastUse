@@ -14,8 +14,11 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
+import xyz.sk7z.fastuse.FastUseParam;
+import xyz.sk7z.fastuse.FastUse;
 import xyz.sk7z.fastuse.Food.Food;
 import xyz.sk7z.fastuse.Food.FoodList;
+import xyz.sk7z.fastuse.ToggleOptionType;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -56,8 +59,11 @@ public class PlayerListener extends ListenerFrame {
 
     @EventHandler(priority = EventPriority.LOW)
     public void PlayerItemConsume(PlayerItemConsumeEvent event) {
-        if (foodList.isFood(event.getItem().getType()))
-            event.setCancelled(true);
+        FastUseParam ep;
+        if ((ep = ((FastUse) plg).getEatParamUser(event.getPlayer())) == null || ep.getOpt() == ToggleOptionType.ON) {
+            if (foodList.isFood(event.getItem().getType()))
+                event.setCancelled(true);
+        }
 
     }
 
@@ -68,67 +74,62 @@ public class PlayerListener extends ListenerFrame {
         ItemStack chestplate_Item = player.getInventory().getChestplate();
         ItemStack usedItem = event.getItem();
         //右クリック以外は無視
+
         if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK) {
             return;
         }
-
-
         //player.sendMessage("イベントが呼ばれた" + new Date());
         //player.chat("FoodLevel:"+player.getFoodLevel());
         //player.chat("SaturationLevel:"+player.getSaturation());
 
-        //エリトラを開いていなくてかつ 空中にいる場合のみ実行する
-        if (!player.isGliding() && !player.isOnGround()) {
-            if (chestplate_Item != null && usedItem != null) {
-                if (player.getInventory().getChestplate().getType() == Material.ELYTRA && event.getItem().getType() == Material.FIREWORK_ROCKET) {
-                    Location l = player.getLocation();
-                    player.teleport(l);
-                    //player.chat("----エリトラ展開----");
-                    player.setGliding(true);
+        FastUseParam gp;
+        if ((gp = ((FastUse) plg).getGlideParamUser(player)) == null || gp.getOpt() == ToggleOptionType.ON)
+            //エリトラを開いていなくてかつ 空中にいる場合のみ実行する
+            if (!player.isGliding() && !player.isOnGround()) {
+                if (chestplate_Item != null && usedItem != null) {
+                    if (player.getInventory().getChestplate().getType() == Material.ELYTRA && event.getItem().getType() == Material.FIREWORK_ROCKET) {
+                        Location l = player.getLocation();
+                        player.teleport(l);
+                        //player.chat("----エリトラ展開----");
+                        player.setGliding(true);
+                    }
                 }
             }
-        }
+        FastUseParam ep;
+        if ((ep = ((FastUse) plg).getEatParamUser(player)) == null || ep.getOpt() == ToggleOptionType.ON) {
+            if (usedItem != null && (foodList.isFood(usedItem.getType()))) {
+                if (isHungry(player)) {
 
+                    event.setCancelled(true);
+                    player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EAT, 10, 1);
+                    if (canEat(player)) {
 
-        if (usedItem != null && (foodList.isFood(usedItem.getType()))) {
+                        Food food = foodList.getFood(usedItem.getType());
+                        int old_FoodLevel = player.getFoodLevel();
+                        int new_FoodLevel = old_FoodLevel + food.getFood_points();
+                        if (new_FoodLevel >= 20) {
+                            new_FoodLevel = 20;
+                        }
+                        float old_SaturationLevel = player.getSaturation();
+                        float new_SaturationLevel = old_SaturationLevel + food.getSaturation_restored();
+                        if (new_SaturationLevel >= 20f) {
+                            new_SaturationLevel = 20f;
+                        }
+                        player.setFoodLevel(new_FoodLevel);
+                        player.setSaturation(new_SaturationLevel);
+                        player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EAT, 10, 2);
 
-            if (isHungry(player)) {
+                        usedItem.setAmount(usedItem.getAmount() - 1);
+                        endEat(player);
 
-                event.setCancelled(true);
-                player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EAT, 10, 1);
-
-                if (canEat(player)) {
-
-
-                    Food food = foodList.getFood(usedItem.getType());
-
-                    int old_FoodLevel = player.getFoodLevel();
-                    int new_FoodLevel = old_FoodLevel + food.getFood_points();
-                    if (new_FoodLevel >= 20) {
-                        new_FoodLevel = 20;
                     }
-
-                    float old_SaturationLevel = player.getSaturation();
-                    float new_SaturationLevel = old_SaturationLevel + food.getSaturation_restored();
-                    if (new_SaturationLevel >= 20f) {
-                        new_SaturationLevel = 20f;
-                    }
-
-                    player.setFoodLevel(new_FoodLevel);
-                    player.setSaturation(new_SaturationLevel);
-                    player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EAT, 10, 2);
-
-                    usedItem.setAmount(usedItem.getAmount() - 1);
-
-                    endEat(player);
                 }
-
             }
-
         }
 
 
     }
+
 
     public boolean isHungry(Player player) {
         return player.getFoodLevel() < 20;
