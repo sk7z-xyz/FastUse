@@ -9,6 +9,8 @@ import xyz.sk7z.fastuse.FastUse;
 import xyz.sk7z.fastuse.FastUseParam;
 import xyz.sk7z.fastuse.ToggleOptionType;
 
+import static xyz.sk7z.fastuse.ToggleOptionType.ON;
+
 public class EatCommand extends CommandFrame {
 
     public EatCommand(PluginFrame plg_, String name_) {
@@ -53,7 +55,14 @@ public class EatCommand extends CommandFrame {
             player.sendMessage(eat_param.getType() + ":" + eat_param.getOpt());
         } else {
             FastUseParam eat_param = ((FastUse) plg).getEatParamUser(player);
+
+            if (eat_param == null) {
+                eat_param = new FastUseParam(player, CommandType.EAT, ON);
+                ((FastUse) plg).setEatParamUser(eat_param);
+            }
+
             player.sendMessage(eat_param.getType() + ":" + eat_param.getOpt());
+
         }
 
         return true;

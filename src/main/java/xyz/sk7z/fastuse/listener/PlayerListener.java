@@ -18,11 +18,12 @@ import xyz.sk7z.fastuse.FastUseParam;
 import xyz.sk7z.fastuse.FastUse;
 import xyz.sk7z.fastuse.Food.Food;
 import xyz.sk7z.fastuse.Food.FoodList;
-import xyz.sk7z.fastuse.ToggleOptionType;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
+
+import static xyz.sk7z.fastuse.ToggleOptionType.ON;
 
 /**
  * プレイヤー系イベントリスナクラス
@@ -60,7 +61,7 @@ public class PlayerListener extends ListenerFrame {
     @EventHandler(priority = EventPriority.LOW)
     public void PlayerItemConsume(PlayerItemConsumeEvent event) {
         FastUseParam ep;
-        if ((ep = ((FastUse) plg).getEatParamUser(event.getPlayer())) == null || ep.getOpt() == ToggleOptionType.ON) {
+        if ((ep = ((FastUse) plg).getEatParamUser(event.getPlayer())) == null || ep.getOpt() == ON) {
             if (foodList.isFood(event.getItem().getType()))
                 event.setCancelled(true);
         }
@@ -83,7 +84,7 @@ public class PlayerListener extends ListenerFrame {
         //player.chat("SaturationLevel:"+player.getSaturation());
 
         FastUseParam gp;
-        if ((gp = ((FastUse) plg).getGlideParamUser(player)) == null || gp.getOpt() == ToggleOptionType.ON)
+        if ((gp = ((FastUse) plg).getGlideParamUser(player)) == null || gp.getOpt() == ON)
             //エリトラを開いていなくてかつ 空中にいる場合のみ実行する
             if (!player.isGliding() && !player.isOnGround()) {
                 if (chestplate_Item != null && usedItem != null) {
@@ -96,7 +97,7 @@ public class PlayerListener extends ListenerFrame {
                 }
             }
         FastUseParam ep;
-        if ((ep = ((FastUse) plg).getEatParamUser(player)) == null || ep.getOpt() == ToggleOptionType.ON) {
+        if ((ep = ((FastUse) plg).getEatParamUser(player)) == null || ep.getOpt() == ON) {
             if (usedItem != null && (foodList.isFood(usedItem.getType()))) {
                 if (isHungry(player)) {
 
@@ -127,8 +128,8 @@ public class PlayerListener extends ListenerFrame {
             }
         }
 
-
     }
+
 
 
     public boolean isHungry(Player player) {

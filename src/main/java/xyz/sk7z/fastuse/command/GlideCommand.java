@@ -9,6 +9,8 @@ import xyz.sk7z.fastuse.FastUse;
 import xyz.sk7z.fastuse.FastUseParam;
 import xyz.sk7z.fastuse.ToggleOptionType;
 
+import static xyz.sk7z.fastuse.ToggleOptionType.ON;
+
 public class GlideCommand extends CommandFrame {
 
     public GlideCommand(PluginFrame plg_, String name_) {
@@ -53,6 +55,12 @@ public class GlideCommand extends CommandFrame {
             player.sendMessage(glide_param.getType() + ":" + glide_param.getOpt());
         } else {
             FastUseParam glide_param = ((FastUse) plg).getGlideParamUser(player);
+
+            if (glide_param == null) {
+                glide_param = new FastUseParam(player, CommandType.GLIDE, ON);
+                ((FastUse) plg).setGlideParamUser(glide_param);
+            }
+
             player.sendMessage(glide_param.getType() + ":" + glide_param.getOpt());
         }
 
