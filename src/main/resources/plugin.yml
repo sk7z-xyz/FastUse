@@ -7,19 +7,14 @@ commands:
   fu:
     description: fastuse command.
     usage: /<command> [GLIDE,EAT] [ON/OFF]
-    permission: fastuse.*
-    default: true
+    permission: fastuse
   fu glide:
     description: fastuse command.
     usage: /<command> glide [ON/OFF]
-    permission:
-      fastuse.*
-      fastuse.glide
-    default: true
+    permission: fastuse.glide
   fu eat:
     description: fastuse command.
     usage: /<command> eat [ON/OFF]
-    permission:
-      fastuse.*
-      fasetuser.eat
-    default: true
+    permission: fastuse.eat
+
+
