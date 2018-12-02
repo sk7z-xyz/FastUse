@@ -4,9 +4,9 @@ package xyz.sk7z.fastuse.listener;
 
 import jp.minecraftuser.ecoframework.ListenerFrame;
 import jp.minecraftuser.ecoframework.PluginFrame;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Sound;
+import org.bukkit.*;
+import org.bukkit.advancement.Advancement;
+import org.bukkit.advancement.AdvancementProgress;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -119,6 +119,22 @@ public class PlayerListener extends ListenerFrame {
                         player.setFoodLevel(new_FoodLevel);
                         player.setSaturation(new_SaturationLevel);
                         player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EAT, 10, 2);
+
+                        // 挑戦「バランスの取れた食事」を取得
+                        Advancement advancement = Bukkit.getAdvancement(NamespacedKey.minecraft("husbandry/balanced_diet"));
+                        if (advancement != null) {
+                            // 該当ユーザーの進捗確認
+                            AdvancementProgress progress = player.getAdvancementProgress(advancement);
+                            if (progress != null) {
+                                // 使用アイテムの名前取得(小文字)
+                                String itemName = usedItem.getType().name().toLowerCase();
+                                // まだ進捗が完了していない且つ、食べたことない食料だった場合
+                                if (!progress.isDone() && progress.getRemainingCriteria().contains(itemName)) {
+                                    // 進捗更新
+                                    progress.awardCriteria(itemName);
+                                }
+                            }
+                        }
 
                         usedItem.setAmount(usedItem.getAmount() - 1);
                         endEat(player);
