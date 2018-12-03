@@ -102,20 +102,16 @@ public class PlayerListener extends ListenerFrame {
                 if (isHungry(player)) {
 
                     event.setCancelled(true);
-                    player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EAT, 10, 1);
                     if (canEat(player)) {
 
                         Food food = foodList.getFood(usedItem.getType());
+
                         int old_FoodLevel = player.getFoodLevel();
-                        int new_FoodLevel = old_FoodLevel + food.getFood_points();
-                        if (new_FoodLevel >= 20) {
-                            new_FoodLevel = 20;
-                        }
+                        int new_FoodLevel = Math.min(old_FoodLevel + food.getFood_points(), 20);
+
                         float old_SaturationLevel = player.getSaturation();
-                        float new_SaturationLevel = old_SaturationLevel + food.getSaturation_restored();
-                        if (new_SaturationLevel >= 20f) {
-                            new_SaturationLevel = 20f;
-                        }
+                        float new_SaturationLevel = Math.min(old_SaturationLevel + food.getSaturation_restored(), 20);
+
                         player.setFoodLevel(new_FoodLevel);
                         player.setSaturation(new_SaturationLevel);
                         player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EAT, 10, 2);
@@ -137,6 +133,8 @@ public class PlayerListener extends ListenerFrame {
                         }
 
                         usedItem.setAmount(usedItem.getAmount() - 1);
+
+                        //食べ終わった後の処理
                         endEat(player);
 
                     }
@@ -145,7 +143,6 @@ public class PlayerListener extends ListenerFrame {
         }
 
     }
-
 
 
     public boolean isHungry(Player player) {
