@@ -4,9 +4,12 @@ package xyz.sk7z.fastuse.listener;
 
 import jp.minecraftuser.ecoframework.ListenerFrame;
 import jp.minecraftuser.ecoframework.PluginFrame;
+import net.minecraft.server.v1_13_R2.ItemFood;
+import net.minecraft.server.v1_13_R2.NBTTagCompound;
 import org.bukkit.*;
 import org.bukkit.advancement.Advancement;
 import org.bukkit.advancement.AdvancementProgress;
+import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -70,10 +73,19 @@ public class PlayerListener extends ListenerFrame {
 
     @EventHandler(priority = EventPriority.LOW)
     public void PlayerInteract(PlayerInteractEvent event) {
-
         Player player = event.getPlayer();
-        ItemStack chestplate_Item = player.getInventory().getChestplate();
+        ItemStack chestPlate_Item = player.getInventory().getChestplate();
         ItemStack usedItem = event.getItem();
+
+
+        if (CraftItemStack.asNMSCopy(usedItem).getItem() instanceof ItemFood || true) {
+            net.minecraft.server.v1_13_R2.ItemStack nmsItem = CraftItemStack.asNMSCopy(usedItem);
+            NBTTagCompound nbtc = nmsItem.getTag();
+            nbtc.getKeys().forEach(player::sendMessage);
+
+        }
+
+
         //右クリック以外は無視
 
         if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK) {
@@ -87,7 +99,7 @@ public class PlayerListener extends ListenerFrame {
         if ((gp = ((FastUse) plg).getGlideParamUser(player)) == null || gp.getOpt() == ON)
             //エリトラを開いていなくてかつ 空中にいる場合のみ実行する
             if (!player.isGliding() && !player.isOnGround()) {
-                if (chestplate_Item != null && usedItem != null) {
+                if (chestPlate_Item != null && usedItem != null) {
                     if (player.getInventory().getChestplate().getType() == Material.ELYTRA && event.getItem().getType() == Material.FIREWORK_ROCKET) {
                         Location l = player.getLocation();
                         player.teleport(l);
