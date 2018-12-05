@@ -5,10 +5,10 @@ package xyz.sk7z.fastuse.listener;
 import jp.minecraftuser.ecoframework.ListenerFrame;
 import jp.minecraftuser.ecoframework.PluginFrame;
 import net.minecraft.server.v1_13_R2.ItemFood;
-import net.minecraft.server.v1_13_R2.NBTTagCompound;
+import net.minecraft.server.v1_13_R2.ItemSoup;
 import org.bukkit.*;
-import org.bukkit.advancement.Advancement;
-import org.bukkit.advancement.AdvancementProgress;
+import org.bukkit.craftbukkit.v1_13_R2.CraftWorld;
+import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -19,8 +19,6 @@ import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
 import xyz.sk7z.fastuse.FastUseParam;
 import xyz.sk7z.fastuse.FastUse;
-import xyz.sk7z.fastuse.Food.Food;
-import xyz.sk7z.fastuse.Food.FoodList;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -36,7 +34,6 @@ import static xyz.sk7z.fastuse.ToggleOptionType.ON;
 public class PlayerListener extends ListenerFrame {
 
     private HashMap<Player, Instant> player_eat_time_list = null;
-    private FoodList foodList = null;
 
 
     /**
@@ -48,7 +45,6 @@ public class PlayerListener extends ListenerFrame {
     public PlayerListener(PluginFrame plg_, String name_) {
         super(plg_, name_);
         player_eat_time_list = new HashMap<>();
-        foodList = new FoodList(plg);
 
 
     }
@@ -65,8 +61,10 @@ public class PlayerListener extends ListenerFrame {
     public void PlayerItemConsume(PlayerItemConsumeEvent event) {
         FastUseParam ep;
         if ((ep = ((FastUse) plg).getEatParamUser(event.getPlayer())) == null || ep.getOpt() == ON) {
-            if (foodList.isFood(event.getItem().getType()))
+            if (isFood(event.getItem())) {
+                event.getPlayer().sendMessage("キャンセル");
                 event.setCancelled(true);
+            }
         }
 
     }
@@ -76,14 +74,6 @@ public class PlayerListener extends ListenerFrame {
         Player player = event.getPlayer();
         ItemStack chestPlate_Item = player.getInventory().getChestplate();
         ItemStack usedItem = event.getItem();
-
-
-        if (CraftItemStack.asNMSCopy(usedItem).getItem() instanceof ItemFood || true) {
-            net.minecraft.server.v1_13_R2.ItemStack nmsItem = CraftItemStack.asNMSCopy(usedItem);
-            NBTTagCompound nbtc = nmsItem.getTag();
-            nbtc.getKeys().forEach(player::sendMessage);
-
-        }
 
 
         //右クリック以外は無視
@@ -108,61 +98,51 @@ public class PlayerListener extends ListenerFrame {
                     }
                 }
             }
+
         FastUseParam ep;
+
         if ((ep = ((FastUse) plg).getEatParamUser(player)) == null || ep.getOpt() == ON) {
-            if (usedItem != null && (foodList.isFood(usedItem.getType()))) {
-                if (isHungry(player)) {
+            if (usedItem != null && isFood(usedItem) && isHungry(player)) {
+                event.setCancelled(true);
+                if (canEat(player)) {
+                    //spigotのItemStackをNMS(net.minecraft.server)ItemStackに変換する
+                    net.minecraft.server.v1_13_R2.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(usedItem);
 
-                    event.setCancelled(true);
-                    if (canEat(player)) {
+                    if (nmsItemStack.getItem() instanceof ItemFood) {
 
-                        Food food = foodList.getFood(usedItem.getType());
-
-                        int old_FoodLevel = player.getFoodLevel();
-                        int new_FoodLevel = Math.min(old_FoodLevel + food.getFood_points(), 20);
-
-                        float old_SaturationLevel = player.getSaturation();
-                        float new_SaturationLevel = Math.min(old_SaturationLevel + food.getSaturation_restored(), 20);
-
-                        player.setFoodLevel(new_FoodLevel);
-                        player.setSaturation(new_SaturationLevel);
-                        player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EAT, 10, 2);
-
-                        // 挑戦「バランスの取れた食事」を取得
-                        Advancement advancement = Bukkit.getAdvancement(NamespacedKey.minecraft("husbandry/balanced_diet"));
-                        if (advancement != null) {
-                            // 該当ユーザーの進捗確認
-                            AdvancementProgress progress = player.getAdvancementProgress(advancement);
-                            if (progress != null) {
-                                // 使用アイテムの名前取得(小文字)
-                                String itemName = usedItem.getType().name().toLowerCase();
-                                // まだ進捗が完了していない且つ、食べたことない食料だった場合
-                                if (!progress.isDone() && progress.getRemainingCriteria().contains(itemName)) {
-                                    // 進捗更新
-                                    progress.awardCriteria(itemName);
-                                }
-                            }
-                        }
+                        ItemFood nmsItemFood = (ItemFood) nmsItemStack.getItem();
+                        //ItemFoodクラスのbメソッドを参照して食べる
+                        nmsItemFood.a(nmsItemStack, ((CraftWorld) player.getWorld()).getHandle(), ((CraftPlayer) player).getHandle());
 
                         usedItem.setAmount(usedItem.getAmount() - 1);
 
-                        //食べ終わった後の処理
+                        //スープ用個別処理
+                        if (nmsItemFood instanceof ItemSoup) {
+                            player.getInventory().addItem(new ItemStack(Material.BOWL, 1));
+                        }
+
                         endEat(player);
 
                     }
+
                 }
             }
+
         }
 
     }
 
+    private boolean isFood(ItemStack item) {
+        return CraftItemStack.asNMSCopy(item).getItem() instanceof ItemFood;
+    }
 
-    public boolean isHungry(Player player) {
+
+    private boolean isHungry(Player player) {
         return player.getFoodLevel() < 20;
     }
 
 
-    public boolean canEat(Player player) {
+    private boolean canEat(Player player) {
         if (!isHungry(player)) {
             return false;
         }
@@ -182,11 +162,11 @@ public class PlayerListener extends ListenerFrame {
         }
     }
 
-    public void setEatStartTime(Player player) {
+    private void setEatStartTime(Player player) {
         player_eat_time_list.put(player, Instant.now());
     }
 
-    public void endEat(Player player) {
+    private void endEat(Player player) {
         player_eat_time_list.remove(player);
     }
 
