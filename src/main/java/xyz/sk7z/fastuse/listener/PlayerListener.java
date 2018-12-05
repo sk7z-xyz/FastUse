@@ -4,9 +4,9 @@ package xyz.sk7z.fastuse.listener;
 
 import jp.minecraftuser.ecoframework.ListenerFrame;
 import jp.minecraftuser.ecoframework.PluginFrame;
-import net.minecraft.server.v1_13_R2.ItemFood;
-import net.minecraft.server.v1_13_R2.ItemSoup;
+import net.minecraft.server.v1_13_R2.*;
 import org.bukkit.*;
+import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_13_R2.CraftWorld;
 import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftItemStack;
@@ -74,6 +74,8 @@ public class PlayerListener extends ListenerFrame {
         Player player = event.getPlayer();
         ItemStack chestPlate_Item = player.getInventory().getChestplate();
         ItemStack usedItem = event.getItem();
+        //spigotのItemStackをNMS(net.minecraft.server)ItemStackに変換する
+        net.minecraft.server.v1_13_R2.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(usedItem);
 
 
         //右クリック以外は無視
@@ -81,6 +83,8 @@ public class PlayerListener extends ListenerFrame {
         if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK) {
             return;
         }
+
+
         //player.sendMessage("イベントが呼ばれた" + new Date());
         //player.chat("FoodLevel:"+player.getFoodLevel());
         //player.chat("SaturationLevel:"+player.getSaturation());
@@ -102,12 +106,10 @@ public class PlayerListener extends ListenerFrame {
         FastUseParam ep;
 
         if ((ep = ((FastUse) plg).getEatParamUser(player)) == null || ep.getOpt() == ON) {
-            if (usedItem != null && isFood(usedItem) && isHungry(player)) {
+            if (usedItem != null && isFood(usedItem) && (isHungry(player) || canSatietyEat(usedItem))) {
                 event.setCancelled(true);
+                player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EAT, 10, 1);
                 if (canEat(player)) {
-                    //spigotのItemStackをNMS(net.minecraft.server)ItemStackに変換する
-                    net.minecraft.server.v1_13_R2.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(usedItem);
-
                     if (nmsItemStack.getItem() instanceof ItemFood) {
 
                         ItemFood nmsItemFood = (ItemFood) nmsItemStack.getItem();
@@ -120,7 +122,7 @@ public class PlayerListener extends ListenerFrame {
                         if (nmsItemFood instanceof ItemSoup) {
                             player.getInventory().addItem(new ItemStack(Material.BOWL, 1));
                         }
-
+                        player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EAT, 10, 2);
                         endEat(player);
 
                     }
@@ -130,7 +132,9 @@ public class PlayerListener extends ListenerFrame {
 
         }
 
+
     }
+
 
     private boolean isFood(ItemStack item) {
         return CraftItemStack.asNMSCopy(item).getItem() instanceof ItemFood;
@@ -141,13 +145,21 @@ public class PlayerListener extends ListenerFrame {
         return player.getFoodLevel() < 20;
     }
 
+    //満腹でも食べられるか 英語わかんねー
+    private boolean canSatietyEat(ItemStack item) {
+        switch (item.getType()) {
+            case GOLDEN_APPLE:
+            case ENCHANTED_GOLDEN_APPLE:
+            case CHORUS_FRUIT:
+                return true;
+        }
+        return false;
+    }
+
 
     private boolean canEat(Player player) {
-        if (!isHungry(player)) {
-            return false;
-        }
 
-        player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EAT, 10, 1);
+
         if (player_eat_time_list.containsKey(player)) {
             Instant eat_time = player_eat_time_list.get(player);
             //食べ始めてから30秒立ってたら拒否
