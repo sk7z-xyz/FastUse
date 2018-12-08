@@ -2,6 +2,7 @@ package xyz.sk7z.fastuse;
 
 import jp.minecraftuser.ecoframework.CommandFrame;
 import jp.minecraftuser.ecoframework.PluginFrame;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import xyz.sk7z.fastuse.command.EatCommand;
 import xyz.sk7z.fastuse.command.FastUseCommand;
@@ -21,7 +22,9 @@ public class FastUse extends PluginFrame {
         initialize();
         eatList = new HashMap<>();
         glideList = new HashMap<>();
+        Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Lag(), 100L, 1L);
     }
+
 
 
     @Override
@@ -48,6 +51,7 @@ public class FastUse extends PluginFrame {
     public void initializeListener() {
         registerPluginListener(new PlayerListener(this, "player"));
     }
+
 
 
     public void setGetter(Player pl) {
