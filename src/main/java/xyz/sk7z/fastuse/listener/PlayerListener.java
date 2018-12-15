@@ -67,7 +67,6 @@ public class PlayerListener extends ListenerFrame {
         FastUseParam ep;
         if ((ep = ((FastUse) plg).getEatParamUser(event.getPlayer())) == null || ep.getOpt() == ON) {
             if (isFood(event.getItem())) {
-                event.getPlayer().sendMessage("キャンセル");
                 event.setCancelled(true);
             }
         }
