@@ -7,7 +7,9 @@ import org.bukkit.entity.Player;
 import xyz.sk7z.fastuse.command.EatCommand;
 import xyz.sk7z.fastuse.command.FastUseCommand;
 import xyz.sk7z.fastuse.command.GlideCommand;
-import xyz.sk7z.fastuse.listener.PlayerListener;
+import xyz.sk7z.fastuse.listener.AttackListener;
+import xyz.sk7z.fastuse.listener.EatListener;
+import xyz.sk7z.fastuse.listener.GlideListener;
 
 import java.util.HashMap;
 
@@ -49,7 +51,9 @@ public class FastUse extends PluginFrame {
 
     @Override
     public void initializeListener() {
-        registerPluginListener(new PlayerListener(this, "player"));
+        registerPluginListener(new AttackListener(this, "player"));
+        registerPluginListener(new EatListener(this, "player"));
+        registerPluginListener(new GlideListener(this, "player"));
     }
 
 
