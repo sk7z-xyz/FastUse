@@ -10,6 +10,7 @@ import xyz.sk7z.fastuse.command.GlideCommand;
 import xyz.sk7z.fastuse.listener.AttackListener;
 import xyz.sk7z.fastuse.listener.EatListener;
 import xyz.sk7z.fastuse.listener.GlideListener;
+import xyz.sk7z.fastuse.listener.PlayerHeadChangeListener;
 
 import java.util.HashMap;
 
@@ -54,6 +55,7 @@ public class FastUse extends PluginFrame {
         registerPluginListener(new AttackListener(this, "player"));
         registerPluginListener(new EatListener(this, "player"));
         registerPluginListener(new GlideListener(this, "player"));
+        registerPluginListener(new PlayerHeadChangeListener(this,"Player"));
     }
 
 
