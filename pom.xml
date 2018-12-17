@@ -58,7 +58,7 @@
         <repository>
             <id>eco-rep</id>
             <name>eco-rep</name>
-            <url>file://${project.build.directory}/deproy</url>
+            <url>file://${project.build.directory}/deploy</url>
         </repository>
     </distributionManagement>
 </project>
