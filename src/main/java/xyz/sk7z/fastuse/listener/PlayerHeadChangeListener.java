@@ -2,12 +2,16 @@ package xyz.sk7z.fastuse.listener;
 
 import jp.minecraftuser.ecoframework.ListenerFrame;
 import jp.minecraftuser.ecoframework.PluginFrame;
+import net.minecraft.server.v1_13_R2.NBTBase;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftItemStack;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
@@ -15,6 +19,35 @@ public class PlayerHeadChangeListener extends ListenerFrame {
 
     public PlayerHeadChangeListener(PluginFrame plg_, String name_) {
         super(plg_, name_);
+    }
+
+
+    //Headの情報を表示する
+    //コマンド用意するのがめんどかった()
+    @EventHandler(priority = EventPriority.LOW)
+    public void playerHeadInfo(PlayerInteractEvent event) {
+        Player player = event.getPlayer();
+        ItemStack item_skull;
+        Block block = event.getClickedBlock();
+        if (block == null) {
+            return;
+        }
+        if (block.getType() != Material.CARROTS) {
+            return;
+        }
+        if (event.getItem().getType() == Material.PLAYER_HEAD) {
+            item_skull = event.getItem();
+        } else {
+            return;
+        }
+        event.setCancelled(true);
+        net.minecraft.server.v1_13_R2.ItemStack nms_item_skull = CraftItemStack.asNMSCopy(item_skull);
+        NBTBase skull_Owner = nms_item_skull.getTag() != null ? nms_item_skull.getTag().get("SkullOwner") : null;
+        if (skull_Owner != null) {
+            player.sendMessage(skull_Owner.toString());
+        }
+
+
     }
 
     @EventHandler(priority = EventPriority.LOW)
@@ -35,7 +68,6 @@ public class PlayerHeadChangeListener extends ListenerFrame {
         }
         playerHeadChange(item_skull, target_player);
 
-
     }
 
     public ItemStack playerHeadChange(ItemStack item_skull, Player player) {
@@ -43,6 +75,7 @@ public class PlayerHeadChangeListener extends ListenerFrame {
         skull_meta.setDisplayName(player.getName() + " の頭");
         skull_meta.setOwningPlayer(player);
         item_skull.setItemMeta(skull_meta);
+
         return item_skull;
 
     }

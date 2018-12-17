@@ -2,7 +2,9 @@ package xyz.sk7z.fastuse.listener;
 
 import jp.minecraftuser.ecoframework.ListenerFrame;
 import jp.minecraftuser.ecoframework.PluginFrame;
+import net.minecraft.server.v1_13_R2.ItemLingeringPotion;
 import net.minecraft.server.v1_13_R2.ItemPotion;
+import net.minecraft.server.v1_13_R2.ItemSplashPotion;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.craftbukkit.v1_13_R2.CraftWorld;
@@ -13,7 +15,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
 import xyz.sk7z.fastuse.FastUse;
 import xyz.sk7z.fastuse.FastUseParam;
@@ -54,11 +55,12 @@ public class DrinkListener extends ListenerFrame {
 
 
         if ((ep = ((FastUse) plg).getEatParamUser(player)) == null || ep.getOpt() == ON) {
-            if (usedItem != null && isPotion(usedItem)) {
+            if (usedItem != null && isNormalPotion(usedItem)) {
                 event.setCancelled(true);
                 player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_DRINK, 10, 1);
                 if (canDrink(player)) {
                     if (nmsItemStack.getItem() instanceof ItemPotion) {
+
 
                         ItemPotion nmsItemPotion = (ItemPotion) nmsItemStack.getItem();
                         //ItemFoodクラスのbメソッドを参照して飲む
@@ -79,20 +81,15 @@ public class DrinkListener extends ListenerFrame {
 
     }
 
-    @EventHandler(priority = EventPriority.LOW)
-    public void PlayerItemConsume(PlayerItemConsumeEvent event) {
 
-        FastUseParam ep;
-        if ((ep = ((FastUse) plg).getEatParamUser(event.getPlayer())) == null || ep.getOpt() == ON) {
-            if (isPotion(event.getItem())) {
-                //通常の食事はキャンセルする
-                event.setCancelled(true);
-            }
+    private boolean isNormalPotion(ItemStack item) {
+        net.minecraft.server.v1_13_R2.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(item);
+        if (nmsItemStack.getItem() instanceof ItemPotion) {
+            //スプラッシュポーションと残留ポーションはfalse
+            return !(nmsItemStack.getItem() instanceof ItemLingeringPotion) && !(nmsItemStack.getItem() instanceof ItemSplashPotion);
+
         }
-    }
-
-    private boolean isPotion(ItemStack item) {
-        return CraftItemStack.asNMSCopy(item).getItem() instanceof ItemPotion;
+        return false;
     }
 
 
@@ -100,13 +97,13 @@ public class DrinkListener extends ListenerFrame {
 
         if (player_drink_time_list.containsKey(player)) {
 
-            Instant eat_time = player_drink_time_list.get(player);
+            Instant drink_start_time = player_drink_time_list.get(player);
             //食べ始めてから30秒立ってたら拒否
-            if (ChronoUnit.SECONDS.between(eat_time, Instant.now()) >= 30f) {
+            if (ChronoUnit.SECONDS.between(drink_start_time, Instant.now()) >= 30f) {
                 setDrinkEnd(player);
                 return false;
             }
-            return ChronoUnit.SECONDS.between(eat_time, Instant.now()) >= 2;
+            return ChronoUnit.SECONDS.between(drink_start_time, Instant.now()) >= 2;
         } else {
             setDrinkStart(player);
             return false;
