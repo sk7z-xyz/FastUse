@@ -3,6 +3,7 @@ package xyz.sk7z.fastuse.listener;
 import jp.minecraftuser.ecoframework.ListenerFrame;
 import jp.minecraftuser.ecoframework.PluginFrame;
 import net.minecraft.server.v1_13_R2.ItemBow;
+import org.bukkit.Sound;
 import org.bukkit.craftbukkit.v1_13_R2.CraftWorld;
 import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftItemStack;
@@ -13,6 +14,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 import xyz.sk7z.fastuse.FastUse;
 import xyz.sk7z.fastuse.FastUseParam;
 import xyz.sk7z.fastuse.player_values.PlayerShotValues;
@@ -116,11 +118,13 @@ public class ShotListener extends ListenerFrame {
                 //見つからなければ
                 if (!playerShotValues.isAlreadyStarted()) {
                     playerShotValues.setStartTime();
-                   // player.sendMessage("チャージ開始");
+                    playerShotValues.setStart_tick(player.getWorld().getTime());
+                    new InfoFullCharge(player, plg).runTaskLater(plg, 5);
                 } else {
                     //120秒以上経過してたらやり直し
                     if (playerShotValues.getElapsedTimeMillis() >= 120 * 1000) {
                         playerShotValues.setStartTime();
+                        new InfoFullCharge(player, plg).runTaskLater(plg, 1);
                     }
                 }
             }
@@ -134,4 +138,27 @@ public class ShotListener extends ListenerFrame {
         return CraftItemStack.asNMSCopy(item).getItem() instanceof ItemBow;
     }
 
+}
+
+class InfoFullCharge extends BukkitRunnable {
+    private FastUse plugin;
+    private Player player;
+
+    public InfoFullCharge(Player player, FastUse plugin) {
+        this.player = player;
+        this.plugin = plugin;
+
+    }
+
+    @Override
+    public void run() {
+        PlayerShotValues playerShotValues = plugin.getPlayerValues(player).getShotValues();
+        if (player.getWorld().getTime() - playerShotValues.getStart_tick() >= 20 || (player.getWorld().getTime() - playerShotValues.getStart_tick() >= 5 && playerShotValues.getElapsedTimeMillis() >= 1000)) {
+            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_HARP, 10, 10);
+        } else {
+            new InfoFullCharge(player, plugin).runTaskLater(plugin, 1);
+        }
+
+
+    }
 }
