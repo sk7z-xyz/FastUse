@@ -18,20 +18,18 @@ import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
 import xyz.sk7z.fastuse.FastUse;
 import xyz.sk7z.fastuse.FastUseParam;
-
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.HashMap;
+import xyz.sk7z.fastuse.player_values.PlayerEatValues;
 
 import static xyz.sk7z.fastuse.ToggleOptionType.ON;
 
 public class EatListener extends ListenerFrame {
 
-    private HashMap<Player, Instant> player_eat_time_list = null;
+    private FastUse plg;
 
     public EatListener(PluginFrame plg_, String name_) {
         super(plg_, name_);
-        player_eat_time_list = new HashMap<>();
+        this.plg = (FastUse) plg_;
+
 
     }
 
@@ -40,6 +38,7 @@ public class EatListener extends ListenerFrame {
     public void PlayerInteract(PlayerInteractEvent event) {
 
         Player player = event.getPlayer();
+        PlayerEatValues playerEatValues = plg.getPlayerValues(player).getEatValues();
         ItemStack usedItem = event.getItem();
         //spigotのItemStackをNMS(net.minecraft.server)ItemStackに変換する
         net.minecraft.server.v1_13_R2.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(usedItem);
@@ -70,7 +69,7 @@ public class EatListener extends ListenerFrame {
                             player.getInventory().addItem(new ItemStack(Material.BOWL, 1));
                         }
 
-                        setEatEnd(player);
+                        playerEatValues.setEndTime();
 
                     }
 
@@ -85,7 +84,7 @@ public class EatListener extends ListenerFrame {
     public void PlayerItemConsume(PlayerItemConsumeEvent event) {
 
         FastUseParam ep;
-        if ((ep = ((FastUse) plg).getEatParamUser(event.getPlayer())) == null || ep.getOpt() == ON) {
+        if ((ep = (plg).getEatParamUser(event.getPlayer())) == null || ep.getOpt() == ON) {
             if (isFood(event.getItem())) {
                 //通常の食事はキャンセルする
                 event.setCancelled(true);
@@ -116,28 +115,16 @@ public class EatListener extends ListenerFrame {
 
 
     private boolean canEat(Player player) {
+        PlayerEatValues playerEatValues = plg.getPlayerValues(player).getEatValues();
 
-        if (player_eat_time_list.containsKey(player)) {
-
-            Instant eat_time = player_eat_time_list.get(player);
-            //食べ始めてから30秒立ってたら拒否
-            if (ChronoUnit.SECONDS.between(eat_time, Instant.now()) >= 30f) {
-                setEatEnd(player);
-                return false;
-            }
-            return ChronoUnit.SECONDS.between(eat_time, Instant.now()) >= 2f;
-        } else {
-            setEatStart(player);
+        //食べ始めてから30秒立ってたら拒否
+        if (playerEatValues.getElapsedTimeMillis() >= 30 * 1000) {
+            playerEatValues.setEndTime();
             return false;
         }
+        return playerEatValues.getElapsedTimeMillis() >= 2 * 1000;
+
     }
 
 
-    private void setEatStart(Player player) {
-        player_eat_time_list.put(player, Instant.now());
-    }
-
-    private void setEatEnd(Player player) {
-        player_eat_time_list.remove(player);
-    }
 }

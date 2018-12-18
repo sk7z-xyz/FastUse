@@ -8,6 +8,7 @@ import xyz.sk7z.fastuse.command.EatCommand;
 import xyz.sk7z.fastuse.command.FastUseCommand;
 import xyz.sk7z.fastuse.command.GlideCommand;
 import xyz.sk7z.fastuse.listener.*;
+import xyz.sk7z.fastuse.player_values.PlayerValues;
 
 import java.util.HashMap;
 
@@ -16,15 +17,16 @@ public class FastUse extends PluginFrame {
     private static Player getter = null;
     HashMap<Player, FastUseParam> eatList = null;
     HashMap<Player, FastUseParam> glideList = null;
+    HashMap<Player, PlayerValues> playerValuesList = null;
 
     @Override
     public void onEnable() {
         initialize();
         eatList = new HashMap<>();
         glideList = new HashMap<>();
+        playerValuesList = new HashMap<>();
         Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Lag(), 100L, 1L);
     }
-
 
 
     @Override
@@ -54,10 +56,9 @@ public class FastUse extends PluginFrame {
         registerPluginListener(new EatListener(this, "player"));
         registerPluginListener(new DrinkListener(this, "player"));
         registerPluginListener(new GlideListener(this, "player"));
-        registerPluginListener(new PlayerHeadChangeListener(this,"Player"));
+        registerPluginListener(new PlayerHeadChangeListener(this, "Player"));
 
     }
-
 
 
     public void setGetter(Player pl) {
@@ -84,6 +85,13 @@ public class FastUse extends PluginFrame {
 
     public FastUseParam getGlideParamUser(Player pl) {
         return glideList.get(pl);
+    }
+
+    public PlayerValues getPlayerValues(Player player) {
+        if (!playerValuesList.containsKey(player)) {
+            playerValuesList.put(player, new PlayerValues());
+        }
+        return playerValuesList.get(player);
     }
 
 

@@ -18,21 +18,19 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import xyz.sk7z.fastuse.FastUse;
 import xyz.sk7z.fastuse.FastUseParam;
-
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.HashMap;
+import xyz.sk7z.fastuse.player_values.PlayerDrinkValues;
+import xyz.sk7z.fastuse.player_values.PlayerEatValues;
 
 import static xyz.sk7z.fastuse.ToggleOptionType.ON;
 
 @SuppressWarnings("Duplicates")
 public class DrinkListener extends ListenerFrame {
 
-    private HashMap<Player, Instant> player_drink_time_list = null;
+    FastUse plg;
 
     public DrinkListener(PluginFrame plg_, String name_) {
         super(plg_, name_);
-        player_drink_time_list = new HashMap<>();
+        this.plg = (FastUse) plg_;
 
     }
 
@@ -41,6 +39,7 @@ public class DrinkListener extends ListenerFrame {
     public void PlayerInteract(PlayerInteractEvent event) {
 
         Player player = event.getPlayer();
+        PlayerDrinkValues playerDrinkValues = plg.getPlayerValues(player).getDrinkValues();
         ItemStack usedItem = event.getItem();
         //spigotのItemStackをNMS(net.minecraft.server)ItemStackに変換する
         net.minecraft.server.v1_13_R2.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(usedItem);
@@ -54,7 +53,7 @@ public class DrinkListener extends ListenerFrame {
         FastUseParam ep;
 
 
-        if ((ep = ((FastUse) plg).getEatParamUser(player)) == null || ep.getOpt() == ON) {
+        if ((ep = (plg).getEatParamUser(player)) == null || ep.getOpt() == ON) {
             if (usedItem != null && isNormalPotion(usedItem)) {
                 event.setCancelled(true);
                 player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_DRINK, 10, 1);
@@ -70,7 +69,7 @@ public class DrinkListener extends ListenerFrame {
 
                         player.getInventory().addItem(new ItemStack(Material.GLASS_BOTTLE, 1));
 
-                        setDrinkEnd(player);
+                        playerDrinkValues.setEndTime();
 
                     }
 
@@ -94,28 +93,14 @@ public class DrinkListener extends ListenerFrame {
 
 
     private boolean canDrink(Player player) {
+        PlayerEatValues playerEatValues = plg.getPlayerValues(player).getEatValues();
 
-        if (player_drink_time_list.containsKey(player)) {
-
-            Instant drink_start_time = player_drink_time_list.get(player);
-            //食べ始めてから30秒立ってたら拒否
-            if (ChronoUnit.SECONDS.between(drink_start_time, Instant.now()) >= 30f) {
-                setDrinkEnd(player);
-                return false;
-            }
-            return ChronoUnit.SECONDS.between(drink_start_time, Instant.now()) >= 2;
-        } else {
-            setDrinkStart(player);
+        //飲み始めてから30秒立ってたら拒否
+        if (playerEatValues.getElapsedTimeMillis() >= 30 * 1000) {
+            playerEatValues.setEndTime();
             return false;
         }
-    }
+        return playerEatValues.getElapsedTimeMillis() >= 2 * 1000;
 
-
-    private void setDrinkStart(Player player) {
-        player_drink_time_list.put(player, Instant.now());
-    }
-
-    private void setDrinkEnd(Player player) {
-        player_drink_time_list.remove(player);
     }
 }

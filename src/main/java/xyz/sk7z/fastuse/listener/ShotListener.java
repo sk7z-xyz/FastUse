@@ -15,24 +15,20 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import xyz.sk7z.fastuse.FastUse;
 import xyz.sk7z.fastuse.FastUseParam;
-
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.HashMap;
+import xyz.sk7z.fastuse.player_values.PlayerShotValues;
 
 import static xyz.sk7z.fastuse.ToggleOptionType.ON;
 
 @SuppressWarnings("Duplicates")
 public class ShotListener extends ListenerFrame {
 
-    private HashMap<Player, Instant> chargeStartTime_PlayerList = null;
-    private HashMap<Player, Boolean> isPluginShot_PlayerList;
+    private FastUse plg;
 
 
     public ShotListener(PluginFrame plg_, String name_) {
         super(plg_, name_);
-        chargeStartTime_PlayerList = new HashMap<>();
-        isPluginShot_PlayerList = new HashMap<>();
+        this.plg = (FastUse) plg_;
+
 
     }
 
@@ -43,24 +39,24 @@ public class ShotListener extends ListenerFrame {
         if (!(event.getEntity() instanceof Player)) {
             return;
         }
+        Player player = (Player) event.getEntity();
+        PlayerShotValues shotValues = plg.getPlayerValues(player).getShotValues();
 
         //fastEatのときはイベント呼ばれなかったけど今回はイベントが呼ばれるので
         //1発目のノーマルで発射した矢は削除してその後プラグインで発射
         //2発目(プラグインでの発射)時には何もしない
 
-        Player player = (Player) event.getEntity();
-        if (isPluginShot_PlayerList.containsKey(player) && isPluginShot_PlayerList.get(player)) {
+
+        shotValues.addShotCount();
+        if (shotValues.isPluginShot()) {
             //今回はプラグインからの発射なのでキャンセルしない
             //プラグインの発射もしない
-            isPluginShot_PlayerList.put(player, false);
             return;
         } else {
             //マイクラ本来の発射はキャンセルする
             //その後プラグインで発射する
-            isPluginShot_PlayerList.put(player, true);
             event.getProjectile().remove();
             //player.sendMessage("バニラの発射をキャンセルしました");
-
         }
 
 
@@ -81,13 +77,11 @@ public class ShotListener extends ListenerFrame {
                 if (nmsItemStack.getItem() instanceof ItemBow) {
 
                     ItemBow nmsItemBow = (ItemBow) nmsItemStack.getItem();
-                    if (chargeStartTime_PlayerList.containsKey(player)) {
 
-                        long ms = ChronoUnit.MILLIS.between(chargeStartTime_PlayerList.get(player), Instant.now());
-                        setChargeEnd(player);
-                        //player.sendMessage("チャージ時間" + ms);
-                        nmsItemBow.a(nmsItemStack, ((CraftWorld) player.getWorld()).getHandle(), ((CraftPlayer) player).getHandle(), 72000 - (int) ms / 50);
-                    }
+                    //player.sendMessage("チャージ時間" + shotValues.getElapsedTimeMillis());
+                    nmsItemBow.a(nmsItemStack, ((CraftWorld) player.getWorld()).getHandle(), ((CraftPlayer) player).getHandle(), (int) (72000 - shotValues.getElapsedTimeMillis() / 50));
+
+                    shotValues.setEndTime();
 
 
                 }
@@ -106,7 +100,7 @@ public class ShotListener extends ListenerFrame {
 
         Player player = event.getPlayer();
         ItemStack usedItem = event.getItem();
-        //spigotのItemStackをNMS(net.minecraft.server)ItemStackに変換する
+        PlayerShotValues playerShotValues = plg.getPlayerValues(player).getShotValues();
 
 
         //右クリック以外は無視
@@ -117,30 +111,22 @@ public class ShotListener extends ListenerFrame {
 
         FastUseParam ep;
 
-        if ((ep = ((FastUse) plg).getEatParamUser(player)) == null || ep.getOpt() == ON) {
+        if ((ep = (plg).getEatParamUser(player)) == null || ep.getOpt() == ON) {
             if (usedItem != null && isBow(usedItem)) {
                 //見つからなければ
-                if (!chargeStartTime_PlayerList.containsKey(player)) {
-                    setChargeStart(player);
-                    //player.sendMessage("チャージ開始");
+                if (!playerShotValues.isAlreadyStarted()) {
+                    playerShotValues.setStartTime();
+                   // player.sendMessage("チャージ開始");
                 } else {
                     //120秒以上経過してたらやり直し
-                    if (ChronoUnit.SECONDS.between(chargeStartTime_PlayerList.get(player), Instant.now()) >= 120f) {
-                        setChargeStart(player);
+                    if (playerShotValues.getElapsedTimeMillis() >= 120 * 1000) {
+                        playerShotValues.setStartTime();
                     }
                 }
             }
 
         }
 
-    }
-
-    private void setChargeStart(Player player) {
-        chargeStartTime_PlayerList.put(player, Instant.now());
-    }
-
-    private void setChargeEnd(Player player) {
-        chargeStartTime_PlayerList.remove(player);
     }
 
 
