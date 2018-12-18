@@ -2,18 +2,23 @@ package xyz.sk7z.fastuse.player_values;
 
 
 public class PlayerValues {
-    private PlayerShotValues shotValues;
+    private PlayerShotValues arrowShotValues;
+    private PlayerShotValues tridentShotValues;
     private PlayerEatValues eatValues;
     private PlayerDrinkValues drinkValues;
 
     public PlayerValues() {
-        this.shotValues = new PlayerShotValues();
+        this.arrowShotValues = new PlayerShotValues();
+        this.tridentShotValues = new PlayerShotValues();
         this.eatValues = new PlayerEatValues();
         this.drinkValues = new PlayerDrinkValues();
     }
 
-    public PlayerShotValues getShotValues() {
-        return shotValues;
+    public PlayerShotValues getArrowShotValues() {
+        return arrowShotValues;
+    }
+    public PlayerShotValues getTridentShotValues() {
+        return tridentShotValues;
     }
 
     public PlayerEatValues getEatValues() {

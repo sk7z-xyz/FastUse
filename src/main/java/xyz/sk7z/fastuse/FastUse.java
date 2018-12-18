@@ -52,11 +52,12 @@ public class FastUse extends PluginFrame {
     @Override
     public void initializeListener() {
         registerPluginListener(new AttackListener(this, "player"));
-        registerPluginListener(new ShotListener(this, "player"));
+        registerPluginListener(new ShotArrowListener(this, "player"));
         registerPluginListener(new EatListener(this, "player"));
         registerPluginListener(new DrinkListener(this, "player"));
         registerPluginListener(new GlideListener(this, "player"));
         registerPluginListener(new PlayerHeadChangeListener(this, "Player"));
+        //registerPluginListener(new ShotTridentListener(this,"Player"));
 
     }
 

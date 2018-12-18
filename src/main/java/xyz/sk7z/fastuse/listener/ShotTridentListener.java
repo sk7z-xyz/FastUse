@@ -2,8 +2,7 @@ package xyz.sk7z.fastuse.listener;
 
 import jp.minecraftuser.ecoframework.ListenerFrame;
 import jp.minecraftuser.ecoframework.PluginFrame;
-import net.minecraft.server.v1_13_R2.ItemBow;
-import org.bukkit.Sound;
+import net.minecraft.server.v1_13_R2.ItemTrident;
 import org.bukkit.craftbukkit.v1_13_R2.CraftWorld;
 import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftItemStack;
@@ -14,7 +13,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
 import xyz.sk7z.fastuse.FastUse;
 import xyz.sk7z.fastuse.FastUseParam;
 import xyz.sk7z.fastuse.player_values.PlayerShotValues;
@@ -22,27 +20,33 @@ import xyz.sk7z.fastuse.player_values.PlayerShotValues;
 import static xyz.sk7z.fastuse.ToggleOptionType.ON;
 
 @SuppressWarnings("Duplicates")
-public class ShotListener extends ListenerFrame {
+public class ShotTridentListener extends ListenerFrame {
 
     private FastUse plg;
 
-
-    public ShotListener(PluginFrame plg_, String name_) {
+    public ShotTridentListener(PluginFrame plg_, String name_) {
         super(plg_, name_);
         this.plg = (FastUse) plg_;
 
 
     }
 
+
+    /* EntityShootTridentEventが呼ばれたら追加*/
     @EventHandler(priority = EventPriority.LOW)
     public void PlayerShotBowEvent(EntityShootBowEvent event) {
 
 
+        if(true){
+            return;
+        }
+
         if (!(event.getEntity() instanceof Player)) {
             return;
         }
+
         Player player = (Player) event.getEntity();
-        PlayerShotValues shotValues = plg.getPlayerValues(player).getShotValues();
+        PlayerShotValues shotValues = plg.getPlayerValues(player).getTridentShotValues();
 
         //fastEatのときはイベント呼ばれなかったけど今回はイベントが呼ばれるので
         //1発目のノーマルで発射した矢は削除してその後プラグインで発射
@@ -63,7 +67,7 @@ public class ShotListener extends ListenerFrame {
 
 
         ItemStack usedItem = player.getInventory().getItemInMainHand();
-        if (!isBow(usedItem)) {
+        if (!isTrident(usedItem)) {
             usedItem = player.getInventory().getItemInOffHand();
         }
 
@@ -75,14 +79,14 @@ public class ShotListener extends ListenerFrame {
 
         if ((ep = ((FastUse) plg).getEatParamUser(player)) == null || ep.getOpt() == ON) {
             //多分この条件式いらないけど念の為
-            if (usedItem != null && isBow(usedItem)) {
-                if (nmsItemStack.getItem() instanceof ItemBow) {
+            if (usedItem != null && isTrident(usedItem)) {
+                if (nmsItemStack.getItem() instanceof ItemTrident) {
 
-                    ItemBow nmsItemBow = (ItemBow) nmsItemStack.getItem();
+                    ItemTrident nmsItemTrident = (ItemTrident) nmsItemStack.getItem();
 
-                    //player.sendMessage("チャージ時間" + shotValues.getElapsedTimeMillis());
-                    nmsItemBow.a(nmsItemStack, ((CraftWorld) player.getWorld()).getHandle(), ((CraftPlayer) player).getHandle(), (int) (72000 - shotValues.getElapsedTimeMillis() / 50));
 
+                    player.sendMessage("チャージ時間" + shotValues.getElapsedTimeMillis());
+                    //nmsItemTrident.a(nmsItemStack, ((CraftWorld) player.getWorld()).getHandle(), ((CraftPlayer) player).getHandle(), (int) (72000 - shotValues.getElapsedTimeMillis() / 50));
                     shotValues.setEndTime();
 
 
@@ -102,7 +106,7 @@ public class ShotListener extends ListenerFrame {
 
         Player player = event.getPlayer();
         ItemStack usedItem = event.getItem();
-        PlayerShotValues playerShotValues = plg.getPlayerValues(player).getShotValues();
+        PlayerShotValues playerShotValues = plg.getPlayerValues(player).getTridentShotValues();
 
 
         //右クリック以外は無視
@@ -114,17 +118,18 @@ public class ShotListener extends ListenerFrame {
         FastUseParam ep;
 
         if ((ep = (plg).getEatParamUser(player)) == null || ep.getOpt() == ON) {
-            if (usedItem != null && isBow(usedItem)) {
+            if (usedItem != null && isTrident(usedItem)) {
+
                 //見つからなければ
                 if (!playerShotValues.isAlreadyStarted()) {
                     playerShotValues.setStartTime();
                     playerShotValues.setStart_tick(player.getWorld().getTime());
-                    new InfoFullCharge(player, plg).runTaskLater(plg, 5);
+                    new FullChargeSound(player, plg).runTaskLater(plg, 5);
                 } else {
                     //120秒以上経過してたらやり直し
                     if (playerShotValues.getElapsedTimeMillis() >= 120 * 1000) {
                         playerShotValues.setStartTime();
-                        new InfoFullCharge(player, plg).runTaskLater(plg, 1);
+                        new FullChargeSound(player, plg).runTaskLater(plg, 1);
                     }
                 }
             }
@@ -134,31 +139,8 @@ public class ShotListener extends ListenerFrame {
     }
 
 
-    private boolean isBow(ItemStack item) {
-        return CraftItemStack.asNMSCopy(item).getItem() instanceof ItemBow;
+    private boolean isTrident(ItemStack item) {
+        return CraftItemStack.asNMSCopy(item).getItem() instanceof ItemTrident;
     }
 
-}
-
-class InfoFullCharge extends BukkitRunnable {
-    private FastUse plugin;
-    private Player player;
-
-    public InfoFullCharge(Player player, FastUse plugin) {
-        this.player = player;
-        this.plugin = plugin;
-
-    }
-
-    @Override
-    public void run() {
-        PlayerShotValues playerShotValues = plugin.getPlayerValues(player).getShotValues();
-        if (player.getWorld().getTime() - playerShotValues.getStart_tick() >= 20 || (player.getWorld().getTime() - playerShotValues.getStart_tick() >= 5 && playerShotValues.getElapsedTimeMillis() >= 1000)) {
-            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_HARP, 10, 10);
-        } else {
-            new InfoFullCharge(player, plugin).runTaskLater(plugin, 1);
-        }
-
-
-    }
 }
