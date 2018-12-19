@@ -15,6 +15,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import xyz.sk7z.fastuse.FastUse;
 import xyz.sk7z.fastuse.FastUseParam;
+import xyz.sk7z.fastuse.FullChargeSound;
 import xyz.sk7z.fastuse.player_values.PlayerShotValues;
 
 import static xyz.sk7z.fastuse.ToggleOptionType.ON;
@@ -117,12 +118,12 @@ public class ShotArrowListener extends ListenerFrame {
                 if (!playerShotValues.isAlreadyStarted()) {
                     playerShotValues.setStartTime();
                     playerShotValues.setStart_tick(player.getWorld().getTime());
-                    new FullChargeSound(player, plg).runTaskLater(plg, 5);
+                    new FullChargeSound(player, plg,playerShotValues).runTaskLater(plg, 5);
                 } else {
                     //120秒以上経過してたらやり直し
                     if (playerShotValues.getElapsedTimeMillis() >= 120 * 1000) {
                         playerShotValues.setStartTime();
-                        new FullChargeSound(player, plg).runTaskLater(plg, 1);
+                        new FullChargeSound(player, plg,playerShotValues).runTaskLater(plg, 1);
                     }
                 }
             }
