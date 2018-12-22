@@ -55,17 +55,29 @@ public class FastUseCommand extends CommandFrame {
         Player player = (Player) sender;
         PlayerOptions options = plg.getPlayerValues(player);
 
+        if (args.length == 1) {
+            if (args[0].equalsIgnoreCase("INFO")) {
+                player.sendMessage("EAT:" + options.getPlayerEatOptions().isEnabled());
+                player.sendMessage("DRINK:" + options.getPlayerDrinkOptions().isEnabled());
+                player.sendMessage("GLIDE:" + options.getPlayerGlideOptions().isEnabled());
+                player.sendMessage("ATTACK:" + options.getPlayerAttackOptions().isEnabled());
+                player.sendMessage("BOW:" + options.getPlayerShotBowOptions().isEnabled());
+                player.sendMessage("TRIDENT:" + options.getPlayerShotTridentValues().isEnabled());
+                return true;
+            }
+        }
 
-        if (args.length <= 1) {
+        if (args.length <= 2) {
             sender.sendMessage(("引数が足りません"));
             return true;
         }
+
         boolean enabled;
 
         try {
             enabled = isEnabledString(args[1]);
         } catch (IllegalArgumentException e) {
-            player.sendMessage("引数が異常です->"+args[1]);
+            player.sendMessage("引数が異常です->" + args[1]);
             return true;
         }
 
@@ -89,10 +101,11 @@ public class FastUseCommand extends CommandFrame {
                 options.getPlayerShotTridentValues().setEnabled(enabled);
                 break;
             default:
-                player.sendMessage("引数が異常です"+args[0]);
+                player.sendMessage("引数が異常です" + args[0]);
+                return true;
 
         }
-
+        player.sendMessage("設定を変更しました" + CommandType.valueOf(args[0].toUpperCase()) + ":" + isEnabledString(args[1]));
 
         return true;
     }
