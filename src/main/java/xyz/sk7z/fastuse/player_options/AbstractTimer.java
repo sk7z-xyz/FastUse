@@ -1,13 +1,14 @@
-package xyz.sk7z.fastuse.player_values;
+package xyz.sk7z.fastuse.player_options;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
-public abstract class abstractTimer {
+public abstract class AbstractTimer {
 
     Instant charge_start_time;
 
-    protected abstractTimer() {
+
+    protected AbstractTimer() {
 
     }
 

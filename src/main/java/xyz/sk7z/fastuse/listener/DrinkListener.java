@@ -17,11 +17,9 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import xyz.sk7z.fastuse.FastUse;
-import xyz.sk7z.fastuse.FastUseParam;
-import xyz.sk7z.fastuse.player_values.PlayerDrinkValues;
-import xyz.sk7z.fastuse.player_values.PlayerEatValues;
+import xyz.sk7z.fastuse.player_options.PlayerDrinkOptions;
+import xyz.sk7z.fastuse.player_options.PlayerEatOptions;
 
-import static xyz.sk7z.fastuse.ToggleOptionType.ON;
 
 @SuppressWarnings("Duplicates")
 public class DrinkListener extends ListenerFrame {
@@ -39,7 +37,7 @@ public class DrinkListener extends ListenerFrame {
     public void PlayerInteract(PlayerInteractEvent event) {
 
         Player player = event.getPlayer();
-        PlayerDrinkValues playerDrinkValues = plg.getPlayerValues(player).getDrinkValues();
+        PlayerDrinkOptions playerDrinkOptions = plg.getPlayerValues(player).getPlayerDrinkOptions();
         ItemStack usedItem = event.getItem();
         //spigotのItemStackをNMS(net.minecraft.server)ItemStackに変換する
         net.minecraft.server.v1_13_R2.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(usedItem);
@@ -50,10 +48,9 @@ public class DrinkListener extends ListenerFrame {
         }
 
 
-        FastUseParam ep;
 
 
-        if ((ep = (plg).getEatParamUser(player)) == null || ep.getOpt() == ON) {
+        if (playerDrinkOptions.isEnabled()) {
             if (usedItem != null && isNormalPotion(usedItem)) {
                 event.setCancelled(true);
                 player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_DRINK, 10, 1);
@@ -69,7 +66,7 @@ public class DrinkListener extends ListenerFrame {
 
                         player.getInventory().addItem(new ItemStack(Material.GLASS_BOTTLE, 1));
 
-                        playerDrinkValues.setEndTime();
+                        playerDrinkOptions.setEndTime();
 
                     }
 
@@ -93,7 +90,7 @@ public class DrinkListener extends ListenerFrame {
 
 
     private boolean canDrink(Player player) {
-        PlayerEatValues playerEatValues = plg.getPlayerValues(player).getEatValues();
+        PlayerEatOptions playerEatValues = plg.getPlayerValues(player).getPlayerEatOptions();
 
         //飲み始めてから30秒立ってたら拒否
         if (playerEatValues.getElapsedTimeMillis() >= 30 * 1000) {

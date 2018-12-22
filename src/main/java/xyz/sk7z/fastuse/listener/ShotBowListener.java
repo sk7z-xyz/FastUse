@@ -14,19 +14,17 @@ import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import xyz.sk7z.fastuse.FastUse;
-import xyz.sk7z.fastuse.FastUseParam;
 import xyz.sk7z.fastuse.FullChargeSound;
-import xyz.sk7z.fastuse.player_values.PlayerShotValues;
+import xyz.sk7z.fastuse.player_options.PlayerShotOptions;
 
-import static xyz.sk7z.fastuse.ToggleOptionType.ON;
 
 @SuppressWarnings("Duplicates")
-public class ShotArrowListener extends ListenerFrame {
+public class ShotBowListener extends ListenerFrame {
 
     private FastUse plg;
 
 
-    public ShotArrowListener(PluginFrame plg_, String name_) {
+    public ShotBowListener(PluginFrame plg_, String name_) {
         super(plg_, name_);
         this.plg = (FastUse) plg_;
 
@@ -40,16 +38,20 @@ public class ShotArrowListener extends ListenerFrame {
         if (!(event.getEntity() instanceof Player)) {
             return;
         }
+
         Player player = (Player) event.getEntity();
-        PlayerShotValues shotValues = plg.getPlayerValues(player).getArrowShotValues();
+        PlayerShotOptions playerShotBowOptions = plg.getPlayerValues(player).getPlayerShotBowOptions();
+        if (!playerShotBowOptions.isEnabled()) {
+            return;
+        }
 
         //fastEatのときはイベント呼ばれなかったけど今回はイベントが呼ばれるので
         //1発目のノーマルで発射した矢は削除してその後プラグインで発射
         //2発目(プラグインでの発射)時には何もしない
 
+        playerShotBowOptions.addShotCount();
 
-        shotValues.addShotCount();
-        if (shotValues.isPluginShot()) {
+        if (playerShotBowOptions.isPluginShot()) {
             //今回はプラグインからの発射なのでキャンセルしない
             //プラグインの発射もしない
             return;
@@ -69,29 +71,19 @@ public class ShotArrowListener extends ListenerFrame {
         //spigotのItemStackをNMS(net.minecraft.server)ItemStackに変換する
         net.minecraft.server.v1_13_R2.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(usedItem);
 
-        FastUseParam ep;
 
+        if (usedItem != null && isBow(usedItem)) {
+            if (nmsItemStack.getItem() instanceof ItemBow) {
 
-        if ((ep = ((FastUse) plg).getEatParamUser(player)) == null || ep.getOpt() == ON) {
-            //多分この条件式いらないけど念の為
-            if (usedItem != null && isBow(usedItem)) {
-                if (nmsItemStack.getItem() instanceof ItemBow) {
+                ItemBow nmsItemBow = (ItemBow) nmsItemStack.getItem();
 
-                    ItemBow nmsItemBow = (ItemBow) nmsItemStack.getItem();
+                //player.sendMessage("チャージ時間" + shotValues.getElapsedTimeMillis());
+                nmsItemBow.a(nmsItemStack, ((CraftWorld) player.getWorld()).getHandle(), ((CraftPlayer) player).getHandle(), (int) (72000 - playerShotBowOptions.getElapsedTimeMillis() / 50));
 
-                    //player.sendMessage("チャージ時間" + shotValues.getElapsedTimeMillis());
-                    nmsItemBow.a(nmsItemStack, ((CraftWorld) player.getWorld()).getHandle(), ((CraftPlayer) player).getHandle(), (int) (72000 - shotValues.getElapsedTimeMillis() / 50));
-
-                    shotValues.setEndTime();
-
-
-                }
-
+                playerShotBowOptions.setEndTime();
 
             }
-
         }
-
     }
 
 
@@ -100,8 +92,8 @@ public class ShotArrowListener extends ListenerFrame {
     public void PlayerInteract(PlayerInteractEvent event) {
 
         Player player = event.getPlayer();
+        PlayerShotOptions playerShotValues = plg.getPlayerValues(player).getPlayerShotBowOptions();
         ItemStack usedItem = event.getItem();
-        PlayerShotValues playerShotValues = plg.getPlayerValues(player).getArrowShotValues();
 
 
         //右クリック以外は無視
@@ -110,20 +102,18 @@ public class ShotArrowListener extends ListenerFrame {
         }
 
 
-        FastUseParam ep;
-
-        if ((ep = (plg).getEatParamUser(player)) == null || ep.getOpt() == ON) {
+        if (playerShotValues.isEnabled()) {
             if (usedItem != null && isBow(usedItem)) {
                 //見つからなければ
                 if (!playerShotValues.isAlreadyStarted()) {
                     playerShotValues.setStartTime();
                     playerShotValues.setStart_tick(player.getWorld().getTime());
-                    new FullChargeSound(player, plg,playerShotValues).runTaskLater(plg, 5);
+                    new FullChargeSound(player, plg, playerShotValues).runTaskLater(plg, 5);
                 } else {
                     //120秒以上経過してたらやり直し
                     if (playerShotValues.getElapsedTimeMillis() >= 120 * 1000) {
                         playerShotValues.setStartTime();
-                        new FullChargeSound(player, plg,playerShotValues).runTaskLater(plg, 1);
+                        new FullChargeSound(player, plg, playerShotValues).runTaskLater(plg, 1);
                     }
                 }
             }

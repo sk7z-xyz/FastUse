@@ -17,10 +17,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
 import xyz.sk7z.fastuse.FastUse;
-import xyz.sk7z.fastuse.FastUseParam;
-import xyz.sk7z.fastuse.player_values.PlayerEatValues;
+import xyz.sk7z.fastuse.player_options.PlayerEatOptions;
 
-import static xyz.sk7z.fastuse.ToggleOptionType.ON;
 
 public class EatListener extends ListenerFrame {
 
@@ -38,7 +36,7 @@ public class EatListener extends ListenerFrame {
     public void PlayerInteract(PlayerInteractEvent event) {
 
         Player player = event.getPlayer();
-        PlayerEatValues playerEatValues = plg.getPlayerValues(player).getEatValues();
+        PlayerEatOptions playerEatOptions = plg.getPlayerValues(player).getPlayerEatOptions();
         ItemStack usedItem = event.getItem();
         //spigotのItemStackをNMS(net.minecraft.server)ItemStackに変換する
         net.minecraft.server.v1_13_R2.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(usedItem);
@@ -49,9 +47,7 @@ public class EatListener extends ListenerFrame {
         }
 
 
-        FastUseParam ep;
-
-        if ((ep = ((FastUse) plg).getEatParamUser(player)) == null || ep.getOpt() == ON) {
+        if (playerEatOptions.isEnabled()) {
             if (usedItem != null && isFood(usedItem) && (isHungry(player) || canSatietyEat(usedItem))) {
                 event.setCancelled(true);
                 player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EAT, 10, 1);
@@ -69,7 +65,7 @@ public class EatListener extends ListenerFrame {
                             player.getInventory().addItem(new ItemStack(Material.BOWL, 1));
                         }
 
-                        playerEatValues.setEndTime();
+                        playerEatOptions.setEndTime();
 
                     }
 
@@ -83,8 +79,9 @@ public class EatListener extends ListenerFrame {
     @EventHandler(priority = EventPriority.LOW)
     public void PlayerItemConsume(PlayerItemConsumeEvent event) {
 
-        FastUseParam ep;
-        if ((ep = (plg).getEatParamUser(event.getPlayer())) == null || ep.getOpt() == ON) {
+        Player player = event.getPlayer();
+        PlayerEatOptions playerEatOptions = plg.getPlayerValues(player).getPlayerEatOptions();
+        if (playerEatOptions.isEnabled()) {
             if (isFood(event.getItem())) {
                 //通常の食事はキャンセルする
                 event.setCancelled(true);
@@ -115,7 +112,7 @@ public class EatListener extends ListenerFrame {
 
 
     private boolean canEat(Player player) {
-        PlayerEatValues playerEatValues = plg.getPlayerValues(player).getEatValues();
+        PlayerEatOptions playerEatValues = plg.getPlayerValues(player).getPlayerEatOptions();
 
         //食べ始めてから30秒立ってたら拒否
         if (playerEatValues.getElapsedTimeMillis() >= 30 * 1000) {

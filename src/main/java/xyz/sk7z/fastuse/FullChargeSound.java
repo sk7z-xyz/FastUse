@@ -3,14 +3,14 @@ package xyz.sk7z.fastuse;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-import xyz.sk7z.fastuse.player_values.PlayerShotValues;
+import xyz.sk7z.fastuse.player_options.PlayerShotOptions;
 
 public class FullChargeSound extends BukkitRunnable {
     private FastUse plugin;
     private Player player;
-    private PlayerShotValues playerShotValues;
+    private PlayerShotOptions playerShotValues;
 
-    public FullChargeSound(Player player, FastUse plugin, PlayerShotValues playerShotValues) {
+    public FullChargeSound(Player player, FastUse plugin, PlayerShotOptions playerShotValues) {
         this.player = player;
         this.plugin = plugin;
         this.playerShotValues = playerShotValues;

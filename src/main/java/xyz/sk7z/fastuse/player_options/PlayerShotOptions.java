@@ -1,11 +1,13 @@
-package xyz.sk7z.fastuse.player_values;
+package xyz.sk7z.fastuse.player_options;
 
-public class PlayerShotValues extends abstractTimer {
+public class PlayerShotOptions extends AbstractTimer implements Options {
     private int shot_count = 0;
     private long start_tick;
+    private boolean enabled = true;
+
 
     //PlayerValues以外にインスタンスを生成させないようにするためパッケージプライベートにする
-    protected PlayerShotValues() {
+    protected PlayerShotOptions() {
     }
 
     public void addShotCount() {
@@ -22,5 +24,15 @@ public class PlayerShotValues extends abstractTimer {
 
     public void setStart_tick(long start_tick) {
         this.start_tick = start_tick;
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
     }
 }

@@ -10,15 +10,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import xyz.sk7z.fastuse.FastUse;
-import xyz.sk7z.fastuse.FastUseParam;
 import xyz.sk7z.fastuse.FullChargeSound;
-import xyz.sk7z.fastuse.player_values.PlayerShotValues;
-
-import static xyz.sk7z.fastuse.ToggleOptionType.ON;
+import xyz.sk7z.fastuse.player_options.PlayerShotOptions;
 
 @SuppressWarnings("Duplicates")
 public class ShotTridentListener extends ListenerFrame {
@@ -36,27 +32,29 @@ public class ShotTridentListener extends ListenerFrame {
     /* 右クリを離したタイミングで発射するので チャージ開始時間を記録するだけ */
     @EventHandler(priority = EventPriority.LOW)
     public void PlayerInteract(PlayerInteractEvent event) {
+        if (true) {
+            return;
+        }
 
         Player player = event.getPlayer();
         ItemStack usedItem = event.getItem();
-        PlayerShotValues playerShotValues = plg.getPlayerValues(player).getTridentShotValues();
+        PlayerShotOptions playerShotValues = plg.getPlayerValues(player).getPlayerShotTridentValues();
 
 
         if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            FastUseParam ep;
-            if ((ep = (plg).getEatParamUser(player)) == null || ep.getOpt() == ON) {
+            if (playerShotValues.isEnabled()) {
                 if (usedItem != null && isTrident(usedItem)) {
 
                     //見つからなければ
                     if (!playerShotValues.isAlreadyStarted()) {
                         playerShotValues.setStartTime();
                         playerShotValues.setStart_tick(player.getWorld().getTime());
-                        new FullChargeSound(player, plg,playerShotValues).runTaskLater(plg, 5);
+                        new FullChargeSound(player, plg, playerShotValues).runTaskLater(plg, 5);
                     } else {
                         //120秒以上経過してたらやり直し
                         if (playerShotValues.getElapsedTimeMillis() >= 120 * 1000) {
                             playerShotValues.setStartTime();
-                            new FullChargeSound(player, plg,playerShotValues).runTaskLater(plg, 1);
+                            new FullChargeSound(player, plg, playerShotValues).runTaskLater(plg, 1);
                         }
                     }
                 }
@@ -64,7 +62,7 @@ public class ShotTridentListener extends ListenerFrame {
             }
         }
         if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
-            PlayerShotValues shotValues = plg.getPlayerValues(player).getTridentShotValues();
+            PlayerShotOptions shotValues = plg.getPlayerValues(player).getPlayerShotTridentValues();
             net.minecraft.server.v1_13_R2.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(usedItem);
             if (usedItem != null && isTrident(usedItem)) {
                 if (nmsItemStack.getItem() instanceof ItemTrident) {
