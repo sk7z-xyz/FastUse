@@ -4,6 +4,7 @@ package xyz.sk7z.fastuse.command;
 
 import jp.minecraftuser.ecoframework.CommandFrame;
 import jp.minecraftuser.ecoframework.PluginFrame;
+import jp.minecraftuser.ecoframework.Utl;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import xyz.sk7z.fastuse.CommandType;
@@ -55,42 +56,74 @@ public class FastUseCommand extends CommandFrame {
         Player player = (Player) sender;
         PlayerOptions options = plg.getPlayerValues(player);
 
-        if (args.length == 1) {
-            if (args[0].equalsIgnoreCase("INFO")) {
-                player.sendMessage("EAT:" + options.getPlayerEatOptions().isEnabled());
-                player.sendMessage("DRINK:" + options.getPlayerDrinkOptions().isEnabled());
-                player.sendMessage("GLIDE:" + options.getPlayerGlideOptions().isEnabled());
-                player.sendMessage("ATTACK:" + options.getPlayerAttackOptions().isEnabled());
-                player.sendMessage("BOW:" + options.getPlayerShotBowOptions().isEnabled());
-                player.sendMessage("TRIDENT:" + options.getPlayerShotTridentValues().isEnabled());
-                player.sendMessage("SOUND:" + options.getPlayerShotBowOptions().isSoundEnabled());
-                return true;
-            }
-        }
-
-        if (args.length <= 1) {
-            sender.sendMessage(("引数が足りません"));
+        if (args.length == 0) {
+            Utl.sendPluginMessage(plg, player, ("/fastuse [EAT,DRINK,GLIDE,ATTACK,BOW,TRIDENT,SOUND] [ON,OFF]"));
             return true;
         }
+
+        CommandType commandType;
+        try {
+            commandType = CommandType.valueOf(args[0].toUpperCase());
+        } catch (IllegalArgumentException e) {
+            Utl.sendPluginMessage(plg, player, "引数が異常です->" + args[0]);
+            return true;
+        }
+
+        if (args.length == 1) {
+            switch (commandType) {
+                case EAT:
+                    Utl.sendPluginMessage(plg, player, "EAT:" + options.getPlayerEatOptions().isEnabled());
+                    break;
+                case DRINK:
+                    Utl.sendPluginMessage(plg, player, "DRINK:" + options.getPlayerDrinkOptions().isEnabled());
+                    break;
+                case GLIDE:
+                    Utl.sendPluginMessage(plg, player, "GLIDE:" + options.getPlayerGlideOptions().isEnabled());
+                    break;
+                case ATTACK:
+                    Utl.sendPluginMessage(plg, player, "ATTACK:" + options.getPlayerAttackOptions().isEnabled());
+                    break;
+                case BOW:
+                    Utl.sendPluginMessage(plg, player, "BOW:" + options.getPlayerShotBowOptions().isEnabled());
+                    break;
+                case TRIDENT:
+                    Utl.sendPluginMessage(plg, player, "TRIDENT:" + options.getPlayerShotTridentValues().isEnabled());
+                    break;
+                case SOUND:
+                    Utl.sendPluginMessage(plg, player, "SOUND:" + options.getPlayerShotBowOptions().isSoundEnabled());
+                    break;
+                case INFO:
+                    Utl.sendPluginMessage(plg, player, "EAT:" + options.getPlayerEatOptions().isEnabled());
+                    Utl.sendPluginMessage(plg, player, "DRINK:" + options.getPlayerDrinkOptions().isEnabled());
+                    Utl.sendPluginMessage(plg, player, "GLIDE:" + options.getPlayerGlideOptions().isEnabled());
+                    Utl.sendPluginMessage(plg, player, "ATTACK:" + options.getPlayerAttackOptions().isEnabled());
+                    Utl.sendPluginMessage(plg, player, "BOW:" + options.getPlayerShotBowOptions().isEnabled());
+                    Utl.sendPluginMessage(plg, player, "TRIDENT:" + options.getPlayerShotTridentValues().isEnabled());
+                    Utl.sendPluginMessage(plg, player, "SOUND:" + options.getPlayerShotBowOptions().isSoundEnabled());
+                    break;
+            }
+            return true;
+        }
+
 
         boolean enabled;
 
         try {
             enabled = isEnabledString(args[1]);
         } catch (IllegalArgumentException e) {
-            player.sendMessage("引数が異常です->" + args[1]);
+            Utl.sendPluginMessage(plg, player, "引数が異常です->" + args[1]);
             return true;
         }
 
-        switch (CommandType.valueOf(args[0].toUpperCase())) {
+        switch (commandType) {
             case EAT:
                 options.getPlayerEatOptions().setEnabled(enabled);
                 break;
-            case GLIDE:
-                options.getPlayerGlideOptions().setEnabled(enabled);
-                break;
             case DRINK:
                 options.getPlayerDrinkOptions().setEnabled(enabled);
+                break;
+            case GLIDE:
+                options.getPlayerGlideOptions().setEnabled(enabled);
                 break;
             case ATTACK:
                 options.getPlayerAttackOptions().setEnabled(enabled);
@@ -106,11 +139,10 @@ public class FastUseCommand extends CommandFrame {
                 options.getPlayerShotTridentValues().setSoundEnabled(enabled);
                 break;
             default:
-                player.sendMessage("引数が異常です" + args[0]);
+                Utl.sendPluginMessage(plg, player, "引数が異常です->" + commandType);
                 return true;
-
         }
-        player.sendMessage("設定を変更しました" + CommandType.valueOf(args[0].toUpperCase()) + ":" + isEnabledString(args[1]));
+        Utl.sendPluginMessage(plg, player, "設定を変更しました" + commandType + ":" + enabled);
 
         return true;
     }
