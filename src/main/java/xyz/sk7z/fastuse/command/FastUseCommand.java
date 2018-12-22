@@ -63,11 +63,12 @@ public class FastUseCommand extends CommandFrame {
                 player.sendMessage("ATTACK:" + options.getPlayerAttackOptions().isEnabled());
                 player.sendMessage("BOW:" + options.getPlayerShotBowOptions().isEnabled());
                 player.sendMessage("TRIDENT:" + options.getPlayerShotTridentValues().isEnabled());
+                player.sendMessage("SOUND:" + options.getPlayerShotBowOptions().isSoundEnabled());
                 return true;
             }
         }
 
-        if (args.length <= 2) {
+        if (args.length <= 1) {
             sender.sendMessage(("引数が足りません"));
             return true;
         }
@@ -99,6 +100,10 @@ public class FastUseCommand extends CommandFrame {
                 break;
             case TRIDENT:
                 options.getPlayerShotTridentValues().setEnabled(enabled);
+                break;
+            case SOUND:
+                options.getPlayerShotBowOptions().setSoundEnabled(enabled);
+                options.getPlayerShotTridentValues().setSoundEnabled(enabled);
                 break;
             default:
                 player.sendMessage("引数が異常です" + args[0]);

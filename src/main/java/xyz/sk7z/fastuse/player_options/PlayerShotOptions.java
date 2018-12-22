@@ -4,6 +4,7 @@ public class PlayerShotOptions extends AbstractTimer implements Options {
     private int shot_count = 0;
     private long start_tick;
     private boolean enabled = true;
+    private boolean soundEnabled = false;
 
 
     //PlayerValues以外にインスタンスを生成させないようにするためパッケージプライベートにする
@@ -24,6 +25,14 @@ public class PlayerShotOptions extends AbstractTimer implements Options {
 
     public void setStart_tick(long start_tick) {
         this.start_tick = start_tick;
+    }
+
+    public void setSoundEnabled(boolean enabled) {
+        this.soundEnabled = enabled;
+    }
+
+    public boolean isSoundEnabled() {
+        return this.soundEnabled;
     }
 
     @Override

@@ -92,7 +92,7 @@ public class ShotBowListener extends ListenerFrame {
     public void PlayerInteract(PlayerInteractEvent event) {
 
         Player player = event.getPlayer();
-        PlayerShotOptions playerShotValues = plg.getPlayerValues(player).getPlayerShotBowOptions();
+        PlayerShotOptions playerShotBowOptions = plg.getPlayerValues(player).getPlayerShotBowOptions();
         ItemStack usedItem = event.getItem();
 
 
@@ -102,18 +102,22 @@ public class ShotBowListener extends ListenerFrame {
         }
 
 
-        if (playerShotValues.isEnabled()) {
+        if (playerShotBowOptions.isEnabled()) {
             if (usedItem != null && isBow(usedItem)) {
                 //見つからなければ
-                if (!playerShotValues.isAlreadyStarted()) {
-                    playerShotValues.setStartTime();
-                    playerShotValues.setStart_tick(player.getWorld().getTime());
-                    new FullChargeSound(player, plg, playerShotValues).runTaskLater(plg, 5);
+                if (!playerShotBowOptions.isAlreadyStarted()) {
+                    playerShotBowOptions.setStartTime();
+                    playerShotBowOptions.setStart_tick(player.getWorld().getTime());
+                    if (playerShotBowOptions.isSoundEnabled()) {
+                        new FullChargeSound(player, plg, playerShotBowOptions).runTaskLater(plg, 5);
+                    }
                 } else {
                     //120秒以上経過してたらやり直し
-                    if (playerShotValues.getElapsedTimeMillis() >= 120 * 1000) {
-                        playerShotValues.setStartTime();
-                        new FullChargeSound(player, plg, playerShotValues).runTaskLater(plg, 1);
+                    if (playerShotBowOptions.getElapsedTimeMillis() >= 120 * 1000) {
+                        playerShotBowOptions.setStartTime();
+                        if (playerShotBowOptions.isSoundEnabled()) {
+                            new FullChargeSound(player, plg, playerShotBowOptions).runTaskLater(plg, 5);
+                        }
                     }
                 }
             }
