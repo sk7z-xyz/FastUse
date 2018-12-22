@@ -9,11 +9,12 @@ import xyz.sk7z.fastuse.listener.*;
 import xyz.sk7z.fastuse.player_options.PlayerOptions;
 
 import java.util.HashMap;
+import java.util.UUID;
 
 public class FastUse extends PluginFrame {
 
     private static Player getter = null;
-    HashMap<Player, PlayerOptions> playerValuesList = null;
+    HashMap<UUID, PlayerOptions> playerValuesList = null;
 
     @Override
     public void onEnable() {
@@ -55,10 +56,10 @@ public class FastUse extends PluginFrame {
 
 
     public PlayerOptions getPlayerValues(Player player) {
-        if (!playerValuesList.containsKey(player)) {
-            playerValuesList.put(player, new PlayerOptions());
+        if (!playerValuesList.containsKey(player.getUniqueId())) {
+            playerValuesList.put(player.getUniqueId(), new PlayerOptions());
         }
-        return playerValuesList.get(player);
+        return playerValuesList.get(player.getUniqueId());
     }
 
 
