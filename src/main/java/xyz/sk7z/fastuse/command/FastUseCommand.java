@@ -54,7 +54,7 @@ public class FastUseCommand extends CommandFrame {
     public boolean worker(CommandSender sender, String[] args) {
         Player player = (Player) sender;
         PlayerOptions options = plg.getPlayerValues(player);
-        Arrays.asList(args).forEach(player::sendMessage);
+
 
         if (args.length <= 1) {
             sender.sendMessage(("引数が足りません"));
