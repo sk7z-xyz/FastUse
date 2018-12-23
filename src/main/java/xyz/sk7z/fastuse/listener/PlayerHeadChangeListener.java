@@ -72,7 +72,6 @@ public class PlayerHeadChangeListener extends ListenerFrame {
 
     public ItemStack playerHeadChange(ItemStack item_skull, Player player) {
         SkullMeta skull_meta = (SkullMeta) item_skull.getItemMeta();
-        skull_meta.setDisplayName(player.getName() + " の頭");
         skull_meta.setOwningPlayer(player);
         item_skull.setItemMeta(skull_meta);
 
