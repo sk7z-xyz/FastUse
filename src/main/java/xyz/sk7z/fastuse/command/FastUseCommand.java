@@ -14,7 +14,7 @@ import xyz.sk7z.fastuse.player_options.PlayerOptions;
 /**
  * ece infoコマンドクラス
  *
- * @author ecolight
+ * @author sk7z
  */
 public class FastUseCommand extends CommandFrame {
 
@@ -100,7 +100,7 @@ public class FastUseCommand extends CommandFrame {
                     Utl.sendPluginMessage(plg, player, "SOUND:" + options.getPlayerShotBowOptions().isSoundEnabled());
                     break;
                 case STATUS:
-                    ServerStatusCommand.info(plg,player);
+                    ServerStatusCommand.showStatus(plg,player);
             }
             return true;
         }

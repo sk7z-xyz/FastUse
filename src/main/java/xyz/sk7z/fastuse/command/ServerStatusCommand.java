@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ServerStatusCommand {
-    public static void info(PluginFrame plg, Player player) {
+    public static void showStatus(PluginFrame plg, Player player) {
 
         boolean[] time_out = {false};
         long start_time = System.nanoTime();

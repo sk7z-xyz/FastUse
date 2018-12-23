@@ -13,7 +13,6 @@ import java.util.UUID;
 
 public class FastUse extends PluginFrame {
 
-    private static Player getter = null;
     HashMap<UUID, PlayerOptions> playerValuesList = null;
 
     @Override
