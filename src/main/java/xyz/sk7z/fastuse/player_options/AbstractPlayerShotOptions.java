@@ -4,7 +4,7 @@ public abstract class AbstractPlayerShotOptions extends AbstractTimer implements
     private int shot_count = 0;
     private long start_tick;
     private boolean enabled = true;
-    private boolean soundEnabled = false;
+    private boolean soundEnabled = true;
 
 
     //PlayerValues以外にインスタンスを生成させないようにするためパッケージプライベートにする
