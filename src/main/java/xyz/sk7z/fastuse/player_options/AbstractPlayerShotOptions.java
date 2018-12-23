@@ -1,6 +1,6 @@
 package xyz.sk7z.fastuse.player_options;
 
-public class PlayerShotOptions extends AbstractTimer implements Options {
+public abstract class AbstractPlayerShotOptions extends AbstractTimer implements Options {
     private int shot_count = 0;
     private long start_tick;
     private boolean enabled = true;
@@ -8,7 +8,7 @@ public class PlayerShotOptions extends AbstractTimer implements Options {
 
 
     //PlayerValues以外にインスタンスを生成させないようにするためパッケージプライベートにする
-    protected PlayerShotOptions() {
+    protected AbstractPlayerShotOptions() {
     }
 
     public void addShotCount() {

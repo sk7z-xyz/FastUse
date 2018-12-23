@@ -6,8 +6,8 @@ public class PlayerOptions {
     private PlayerDrinkOptions playerDrinkOptions;
     private PlayerEatOptions playerEatOptions;
     private PlayerGlideOptions playerGlideOptions;
-    private PlayerShotOptions playerShotBowOptions;
-    private PlayerShotOptions playerShotTridentValues;
+    private PlayerShotBowOptions playerShotBowOptions;
+    private PlayerShotTridentOptions playerShotTridentOptions;
 
 
     public PlayerOptions() {
@@ -15,8 +15,8 @@ public class PlayerOptions {
         this.playerDrinkOptions = new PlayerDrinkOptions();
         this.playerEatOptions = new PlayerEatOptions();
         this.playerGlideOptions = new PlayerGlideOptions();
-        this.playerShotBowOptions = new PlayerShotOptions();
-        this.playerShotTridentValues = new PlayerShotOptions();
+        this.playerShotBowOptions = new PlayerShotBowOptions();
+        this.playerShotTridentOptions = new PlayerShotTridentOptions();
     }
 
     public PlayerAttackOptions getPlayerAttackOptions() {
@@ -35,11 +35,11 @@ public class PlayerOptions {
         return playerGlideOptions;
     }
 
-    public PlayerShotOptions getPlayerShotBowOptions() {
+    public PlayerShotBowOptions getPlayerShotBowOptions() {
         return playerShotBowOptions;
     }
 
-    public PlayerShotOptions getPlayerShotTridentValues() {
-        return playerShotTridentValues;
+    public PlayerShotTridentOptions getPlayerShotTridentOptions() {
+        return playerShotTridentOptions;
     }
 }

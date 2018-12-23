@@ -50,7 +50,7 @@ public class FastUse extends PluginFrame {
         registerPluginListener(new DrinkListener(this, "player"));
         registerPluginListener(new GlideListener(this, "player"));
         registerPluginListener(new PlayerHeadChangeListener(this, "Player"));
-        //registerPluginListener(new ShotTridentListener(this,"Player"));
+        registerPluginListener(new ShotTridentListener(this,"Player"));
 
     }
 

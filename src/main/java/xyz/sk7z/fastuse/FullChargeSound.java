@@ -3,14 +3,15 @@ package xyz.sk7z.fastuse;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-import xyz.sk7z.fastuse.player_options.PlayerShotOptions;
+import xyz.sk7z.fastuse.player_options.AbstractPlayerShotOptions;
+import xyz.sk7z.fastuse.player_options.PlayerShotBowOptions;
 
 public class FullChargeSound extends BukkitRunnable {
     private FastUse plugin;
     private Player player;
-    private PlayerShotOptions playerShotValues;
+    private AbstractPlayerShotOptions playerShotValues;
 
-    public FullChargeSound(Player player, FastUse plugin, PlayerShotOptions playerShotValues) {
+    public FullChargeSound(Player player, FastUse plugin, AbstractPlayerShotOptions playerShotValues) {
         this.player = player;
         this.plugin = plugin;
         this.playerShotValues = playerShotValues;
@@ -19,10 +20,22 @@ public class FullChargeSound extends BukkitRunnable {
 
     @Override
     public void run() {
-        if (player.getWorld().getTime() - playerShotValues.getStart_tick() >= 20 || (player.getWorld().getTime() - playerShotValues.getStart_tick() >= 5 && playerShotValues.getElapsedTimeMillis() >= 1000)) {
-            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_HARP, 10, 10);
+        if(!playerShotValues.isSoundEnabled()){
+            return;
+        }
+        if (playerShotValues instanceof PlayerShotBowOptions) {
+            if (player.getWorld().getTime() - playerShotValues.getStart_tick() >= 20 || (player.getWorld().getTime() - playerShotValues.getStart_tick() >= 5 && playerShotValues.getElapsedTimeMillis() >= 1000)) {
+                player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_HARP, 10, 10);
+            } else {
+                new FullChargeSound(player, plugin, playerShotValues).runTaskLater(plugin, 1);
+            }
         } else {
-            new FullChargeSound(player, plugin,playerShotValues).runTaskLater(plugin, 1);
+            if (player.getWorld().getTime() - playerShotValues.getStart_tick() >= 20) {
+                player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_HARP, 10, 10);
+            } else {
+                new FullChargeSound(player, plugin, playerShotValues).runTaskLater(plugin, 1);
+            }
+
         }
 
 

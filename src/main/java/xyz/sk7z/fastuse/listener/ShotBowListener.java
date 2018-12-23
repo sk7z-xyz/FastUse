@@ -15,7 +15,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import xyz.sk7z.fastuse.FastUse;
 import xyz.sk7z.fastuse.FullChargeSound;
-import xyz.sk7z.fastuse.player_options.PlayerShotOptions;
+import xyz.sk7z.fastuse.player_options.AbstractPlayerShotOptions;
+import xyz.sk7z.fastuse.player_options.PlayerShotBowOptions;
 
 
 @SuppressWarnings("Duplicates")
@@ -40,7 +41,7 @@ public class ShotBowListener extends ListenerFrame {
         }
 
         Player player = (Player) event.getEntity();
-        PlayerShotOptions playerShotBowOptions = plg.getPlayerValues(player).getPlayerShotBowOptions();
+        PlayerShotBowOptions playerShotBowOptions = plg.getPlayerValues(player).getPlayerShotBowOptions();
         if (!playerShotBowOptions.isEnabled()) {
             return;
         }
@@ -92,7 +93,7 @@ public class ShotBowListener extends ListenerFrame {
     public void PlayerInteract(PlayerInteractEvent event) {
 
         Player player = event.getPlayer();
-        PlayerShotOptions playerShotBowOptions = plg.getPlayerValues(player).getPlayerShotBowOptions();
+        AbstractPlayerShotOptions playerShotBowOptions = plg.getPlayerValues(player).getPlayerShotBowOptions();
         ItemStack usedItem = event.getItem();
 
 
@@ -108,16 +109,16 @@ public class ShotBowListener extends ListenerFrame {
                 if (!playerShotBowOptions.isAlreadyStarted()) {
                     playerShotBowOptions.setStartTime();
                     playerShotBowOptions.setStart_tick(player.getWorld().getTime());
-                    if (playerShotBowOptions.isSoundEnabled()) {
-                        new FullChargeSound(player, plg, playerShotBowOptions).runTaskLater(plg, 5);
-                    }
+
+                    new FullChargeSound(player, plg, playerShotBowOptions).runTaskLater(plg, 5);
+
                 } else {
                     //120秒以上経過してたらやり直し
                     if (playerShotBowOptions.getElapsedTimeMillis() >= 120 * 1000) {
                         playerShotBowOptions.setStartTime();
-                        if (playerShotBowOptions.isSoundEnabled()) {
-                            new FullChargeSound(player, plg, playerShotBowOptions).runTaskLater(plg, 5);
-                        }
+
+                        new FullChargeSound(player, plg, playerShotBowOptions).runTaskLater(plg, 5);
+
                     }
                 }
             }

@@ -11,8 +11,6 @@ import xyz.sk7z.fastuse.CommandType;
 import xyz.sk7z.fastuse.FastUse;
 import xyz.sk7z.fastuse.player_options.PlayerOptions;
 
-import java.util.Arrays;
-
 /**
  * ece infoコマンドクラス
  *
@@ -87,7 +85,7 @@ public class FastUseCommand extends CommandFrame {
                     Utl.sendPluginMessage(plg, player, "BOW:" + options.getPlayerShotBowOptions().isEnabled());
                     break;
                 case TRIDENT:
-                    Utl.sendPluginMessage(plg, player, "TRIDENT:" + options.getPlayerShotTridentValues().isEnabled());
+                    Utl.sendPluginMessage(plg, player, "TRIDENT:" + options.getPlayerShotTridentOptions().isEnabled());
                     break;
                 case SOUND:
                     Utl.sendPluginMessage(plg, player, "SOUND:" + options.getPlayerShotBowOptions().isSoundEnabled());
@@ -98,9 +96,11 @@ public class FastUseCommand extends CommandFrame {
                     Utl.sendPluginMessage(plg, player, "GLIDE:" + options.getPlayerGlideOptions().isEnabled());
                     Utl.sendPluginMessage(plg, player, "ATTACK:" + options.getPlayerAttackOptions().isEnabled());
                     Utl.sendPluginMessage(plg, player, "BOW:" + options.getPlayerShotBowOptions().isEnabled());
-                    Utl.sendPluginMessage(plg, player, "TRIDENT:" + options.getPlayerShotTridentValues().isEnabled());
+                    Utl.sendPluginMessage(plg, player, "TRIDENT:" + options.getPlayerShotTridentOptions().isEnabled());
                     Utl.sendPluginMessage(plg, player, "SOUND:" + options.getPlayerShotBowOptions().isSoundEnabled());
                     break;
+                case STATUS:
+                    ServerStatusCommand.info(plg,player);
             }
             return true;
         }
@@ -132,11 +132,11 @@ public class FastUseCommand extends CommandFrame {
                 options.getPlayerShotBowOptions().setEnabled(enabled);
                 break;
             case TRIDENT:
-                options.getPlayerShotTridentValues().setEnabled(enabled);
+                options.getPlayerShotTridentOptions().setEnabled(enabled);
                 break;
             case SOUND:
                 options.getPlayerShotBowOptions().setSoundEnabled(enabled);
-                options.getPlayerShotTridentValues().setSoundEnabled(enabled);
+                options.getPlayerShotTridentOptions().setSoundEnabled(enabled);
                 break;
             default:
                 Utl.sendPluginMessage(plg, player, "引数が異常です->" + commandType);
