@@ -64,10 +64,7 @@ public class ShotBowListener extends ListenerFrame {
         }
 
 
-        ItemStack usedItem = player.getInventory().getItemInMainHand();
-        if (!isBow(usedItem)) {
-            usedItem = player.getInventory().getItemInOffHand();
-        }
+        ItemStack usedItem = event.getBow();
 
         //spigotのItemStackをNMS(net.minecraft.server)ItemStackに変換する
         net.minecraft.server.v1_13_R2.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(usedItem);

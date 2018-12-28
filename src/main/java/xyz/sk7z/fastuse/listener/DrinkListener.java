@@ -21,7 +21,7 @@ import xyz.sk7z.fastuse.player_options.PlayerDrinkOptions;
 import xyz.sk7z.fastuse.player_options.PlayerEatOptions;
 
 
-@SuppressWarnings("Duplicates")
+
 public class DrinkListener extends ListenerFrame {
 
     FastUse plg;
