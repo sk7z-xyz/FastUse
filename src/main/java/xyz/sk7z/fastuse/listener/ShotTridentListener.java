@@ -7,10 +7,12 @@ import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import xyz.sk7z.fastuse.FastUse;
 import xyz.sk7z.fastuse.FullChargeSound;
+import xyz.sk7z.fastuse.Lag;
 import xyz.sk7z.fastuse.player_options.PlayerShotTridentOptions;
 
 @SuppressWarnings("Duplicates")
@@ -32,31 +34,30 @@ public class ShotTridentListener extends ListenerFrame {
 
         Player player = event.getPlayer();
         ItemStack usedItem = event.getItem();
-        PlayerShotTridentOptions playerShotValues = plg.getPlayerValues(player).getPlayerShotTridentOptions();
+        PlayerShotTridentOptions playerShotTridentOptions = plg.getPlayerValues(player).getPlayerShotTridentOptions();
 
 
-        if (playerShotValues.isEnabled()) {
-            if (playerShotValues.isEnabled()) {
-                if (usedItem != null && isTrident(usedItem)) {
+        if (playerShotTridentOptions.isEnabled()) {
+            if (usedItem != null && isTrident(usedItem)) {
 
-                    //見つからなければ
-                    if (!playerShotValues.isAlreadyStarted()) {
-                        playerShotValues.setStartTime();
-                        playerShotValues.setStart_tick(player.getWorld().getTime());
-                        new FullChargeSound(player, plg, playerShotValues).runTaskLater(plg, 5);
+                //見つからなければ
+                if (!playerShotTridentOptions.isAlreadyStarted()) {
+                    playerShotTridentOptions.setStartTime();
+                    playerShotTridentOptions.setStart_tick(Lag.getTickCount());
+                    new FullChargeSound(player, plg, playerShotTridentOptions).runTaskLater(plg, 5);
 
-                    } else {
-                        //120秒以上経過してたらやり直し
-                        if (playerShotValues.getElapsedTimeMillis() >= 120 * 1000) {
-                            playerShotValues.setStartTime();
-                            new FullChargeSound(player, plg, playerShotValues).runTaskLater(plg, 1);
+                } else {
+                    //120秒以上経過してたらやり直し
+                    if (playerShotTridentOptions.getElapsedTimeMillis() >= 120 * 1000) {
+                        playerShotTridentOptions.setStartTime();
+                        new FullChargeSound(player, plg, playerShotTridentOptions).runTaskLater(plg, 1);
 
-                        }
                     }
                 }
-
             }
+
         }
+
         /*
         if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
             AbstractPlayerShotOptions shotValues = plg.getPlayerValues(player).getPlayerShotTridentOptions();
@@ -81,7 +82,7 @@ public class ShotTridentListener extends ListenerFrame {
     private boolean isTrident(ItemStack item) {
         return CraftItemStack.asNMSCopy(item).getItem() instanceof ItemTrident;
     }
-/*
+
     @EventHandler(priority = EventPriority.LOW)
     public void ProjectileLaunch(ProjectileLaunchEvent event) {
         if (event.getEntity() == null) {
@@ -96,18 +97,10 @@ public class ShotTridentListener extends ListenerFrame {
             return;
         }
         PlayerShotTridentOptions playerShotTridentOptions = plg.getPlayerValues(player).getPlayerShotTridentOptions();
-        if (event.getEntity() instanceof Trident) {
-            playerShotTridentOptions.setEndTime();
-            Trident trident = (Trident)event.getEntity();
-            PlayerPickupArrowEvent e;
-
-
-
-
-        }
+        playerShotTridentOptions.setEndTime();
 
     }
-    */
+
 
 }
 

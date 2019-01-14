@@ -15,6 +15,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import xyz.sk7z.fastuse.FastUse;
 import xyz.sk7z.fastuse.FullChargeSound;
+import xyz.sk7z.fastuse.Lag;
 import xyz.sk7z.fastuse.player_options.AbstractPlayerShotOptions;
 import xyz.sk7z.fastuse.player_options.PlayerShotBowOptions;
 
@@ -105,7 +106,7 @@ public class ShotBowListener extends ListenerFrame {
                 //見つからなければ
                 if (!playerShotBowOptions.isAlreadyStarted()) {
                     playerShotBowOptions.setStartTime();
-                    playerShotBowOptions.setStart_tick(player.getWorld().getTime());
+                    playerShotBowOptions.setStart_tick(Lag.getTickCount());
 
                     new FullChargeSound(player, plg, playerShotBowOptions).runTaskLater(plg, 5);
 

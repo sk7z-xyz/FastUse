@@ -20,17 +20,18 @@ public class FullChargeSound extends BukkitRunnable {
 
     @Override
     public void run() {
-        if(!playerShotValues.isSoundEnabled()){
+        if (!playerShotValues.isSoundEnabled()) {
             return;
         }
         if (playerShotValues instanceof PlayerShotBowOptions) {
-            if (player.getWorld().getTime() - playerShotValues.getStart_tick() >= 20 || (player.getWorld().getTime() - playerShotValues.getStart_tick() >= 5 && playerShotValues.getElapsedTimeMillis() >= 1000)) {
+            if (Lag.getTickCount() - playerShotValues.getStart_tick() >= 20 || (Lag.getTickCount() - playerShotValues.getStart_tick() >= 5 && playerShotValues.getElapsedTimeMillis() >= 1000)) {
                 player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_HARP, 10, 10);
             } else {
                 new FullChargeSound(player, plugin, playerShotValues).runTaskLater(plugin, 1);
             }
         } else {
-            if (player.getWorld().getTime() - playerShotValues.getStart_tick() >= 20) {
+            player.sendMessage(Lag.getTickCount() + "-" + playerShotValues.getStart_tick());
+            if (Lag.getTickCount() - playerShotValues.getStart_tick() >= 10) {
                 player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_HARP, 10, 10);
             } else {
                 new FullChargeSound(player, plugin, playerShotValues).runTaskLater(plugin, 1);
