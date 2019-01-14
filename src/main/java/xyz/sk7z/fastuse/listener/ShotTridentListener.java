@@ -5,10 +5,8 @@ import jp.minecraftuser.ecoframework.PluginFrame;
 import net.minecraft.server.v1_13_R2.ItemTrident;
 import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Trident;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import xyz.sk7z.fastuse.FastUse;
@@ -28,7 +26,7 @@ public class ShotTridentListener extends ListenerFrame {
     }
 
 
-    /* 右クリを離したタイミングで発射するので チャージ開始時間を記録するだけ */
+    // 右クリを離したタイミングで発射するので チャージ開始時間を記録するだけ
     @EventHandler(priority = EventPriority.LOW)
     public void PlayerInteract(PlayerInteractEvent event) {
 
@@ -83,13 +81,14 @@ public class ShotTridentListener extends ListenerFrame {
     private boolean isTrident(ItemStack item) {
         return CraftItemStack.asNMSCopy(item).getItem() instanceof ItemTrident;
     }
-
+/*
     @EventHandler(priority = EventPriority.LOW)
     public void ProjectileLaunch(ProjectileLaunchEvent event) {
         if (event.getEntity() == null) {
             return;
         }
         Player player;
+
 
         if (event.getEntity().getShooter() instanceof Player) {
             player = (Player) event.getEntity().getShooter();
@@ -99,8 +98,16 @@ public class ShotTridentListener extends ListenerFrame {
         PlayerShotTridentOptions playerShotTridentOptions = plg.getPlayerValues(player).getPlayerShotTridentOptions();
         if (event.getEntity() instanceof Trident) {
             playerShotTridentOptions.setEndTime();
+            Trident trident = (Trident)event.getEntity();
+            PlayerPickupArrowEvent e;
+
+
+
+
         }
 
     }
+    */
 
 }
+

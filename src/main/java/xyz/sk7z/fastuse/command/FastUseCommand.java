@@ -100,7 +100,7 @@ public class FastUseCommand extends CommandFrame {
                     Utl.sendPluginMessage(plg, player, "SOUND:" + options.getPlayerShotBowOptions().isSoundEnabled());
                     break;
                 case STATUS:
-                    ServerStatusCommand.showStatus(plg,player);
+                    ServerStatusCommand.showStatus(plg, player);
             }
             return true;
         }

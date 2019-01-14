@@ -20,6 +20,8 @@ public class FastUse extends PluginFrame {
         initialize();
         playerValuesList = new HashMap<>();
         Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Lag(), 100L, 1L);
+        Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new TimeSync(this), 100L, 5L);
+
     }
 
 
@@ -48,8 +50,8 @@ public class FastUse extends PluginFrame {
         registerPluginListener(new EatListener(this, "player"));
         registerPluginListener(new DrinkListener(this, "player"));
         registerPluginListener(new GlideListener(this, "player"));
-        registerPluginListener(new PlayerHeadChangeListener(this, "Player"));
-        registerPluginListener(new ShotTridentListener(this,"Player"));
+        registerPluginListener(new PlayerHeadChangeListener(this, "player"));
+        registerPluginListener(new ShotTridentListener(this,"player"));
 
     }
 

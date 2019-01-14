@@ -25,5 +25,11 @@ public class Lag
         TICKS[(TICK_COUNT % TICKS.length)] = System.currentTimeMillis();
 
         TICK_COUNT += 1;
+        try {
+            Thread.sleep(0);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
     }
 }
