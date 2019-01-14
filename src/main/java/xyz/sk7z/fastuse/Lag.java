@@ -5,9 +5,10 @@ public class Lag
     public static int TICK_COUNT = 0;
     public static long[] TICKS = new long[600];
 
-    public static int getTickCount(){
+    public static int getTickCount() {
         return TICK_COUNT;
     }
+
     public static double getTPS() {
         return getTPS(100);
     }
@@ -25,13 +26,6 @@ public class Lag
 
     public void run() {
         TICKS[(TICK_COUNT % TICKS.length)] = System.currentTimeMillis();
-
         TICK_COUNT += 1;
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
     }
 }

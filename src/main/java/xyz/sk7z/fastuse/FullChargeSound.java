@@ -30,7 +30,6 @@ public class FullChargeSound extends BukkitRunnable {
                 new FullChargeSound(player, plugin, playerShotValues).runTaskLater(plugin, 1);
             }
         } else {
-            player.sendMessage(Lag.getTickCount() + "-" + playerShotValues.getStart_tick());
             if (Lag.getTickCount() - playerShotValues.getStart_tick() >= 10) {
                 player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_HARP, 10, 10);
             } else {

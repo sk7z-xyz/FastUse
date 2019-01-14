@@ -25,7 +25,6 @@ public class TimeSync implements Runnable {
                 StringBuilder sb = new StringBuilder();
                 sb.append(world.getName()).append(world.getFullTime());
                 world.setTime(time);
-                sb.append("->").append(world.getFullTime());
                 plg.getServer().broadcastMessage(sb.toString());
 
             }
