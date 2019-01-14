@@ -119,7 +119,7 @@ public class EatListener extends ListenerFrame {
             playerEatValues.setEndTime();
             return false;
         }
-        return playerEatValues.getElapsedTimeMillis() >= 2 * 1000;
+        return playerEatValues.getElapsedTimeMillis() >= 1.6 * 1000;
 
     }
 
