@@ -22,11 +22,7 @@ public class TimeSync implements Runnable {
         long time = (calendar.get(Calendar.MILLISECOND) + calendar.get(Calendar.SECOND) * 1000 + (calendar.get(Calendar.MINUTE) % 20) * 60 * 1000) / 50;
         plg.getServer().getWorlds().forEach(world -> {
             if(world.getTime() < time){
-                StringBuilder sb = new StringBuilder();
-                sb.append(world.getName()).append(world.getFullTime());
                 world.setTime(time);
-                plg.getServer().broadcastMessage(sb.toString());
-
             }
         });
 
