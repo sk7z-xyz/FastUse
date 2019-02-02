@@ -55,6 +55,9 @@ public class PlayerHeadChangeListener extends ListenerFrame {
         Player player = event.getPlayer();
         Entity target_entity = event.getRightClicked();
         Player target_player;
+        if(player.isSneaking()){
+            return;
+        }
         if (target_entity instanceof Player) {
             target_player = (Player) target_entity;
         } else {
@@ -63,10 +66,10 @@ public class PlayerHeadChangeListener extends ListenerFrame {
         ItemStack item_skull;
         if (player.getInventory().getItemInMainHand().getType() == Material.PLAYER_HEAD) {
             item_skull = player.getInventory().getItemInMainHand();
-        } else {
-            return;
+            playerHeadChange(item_skull, target_player);
+
         }
-        playerHeadChange(item_skull, target_player);
+
 
     }
 
