@@ -2,10 +2,13 @@ package xyz.sk7z.fastuse.listener;
 
 import jp.minecraftuser.ecoframework.ListenerFrame;
 import jp.minecraftuser.ecoframework.PluginFrame;
+import net.minecraft.server.v1_13_R2.BlockAnvil;
+import net.minecraft.server.v1_13_R2.BlockPropertySlabType;
 import net.minecraft.server.v1_13_R2.ItemFood;
 import net.minecraft.server.v1_13_R2.ItemSoup;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_13_R2.CraftWorld;
 import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftItemStack;
@@ -49,7 +52,10 @@ public class EatListener extends ListenerFrame {
 
         if (playerEatOptions.isEnabled()) {
             if (usedItem != null && isFood(usedItem) && (isHungry(player) || canSatietyEat(usedItem))) {
-                event.setCancelled(true);
+                //もし食べ初めならキャンセルしない(チェストなどを開けるため)
+                if (playerEatOptions.isAlreadyStarted()) {
+                    event.setCancelled(true);
+                }
                 player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EAT, 10, 1);
                 if (canEat(player)) {
                     if (nmsItemStack.getItem() instanceof ItemFood) {
