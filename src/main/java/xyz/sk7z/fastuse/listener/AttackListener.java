@@ -32,7 +32,7 @@ public class AttackListener extends ListenerFrame {
         Player player = (Player) event.getDamager();
 
         PlayerAttackOptions playerAttackOptions = plg.getPlayerValues(player).getPlayerAttackOptions();
-        player.sendMessage(event.getDamage() + "");
+        //player.sendMessage(event.getDamage() + "");
         if (playerAttackOptions.isEnabled()) {
             final double DEFAULT_SWORD_ATTACK_SPEED = 1.6;
             final double DEFAULT_PLAYER_ATTACK_SPEED = 4;
