@@ -16,6 +16,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.Chest;
+import org.bukkit.material.Door;
 import xyz.sk7z.fastuse.FastUse;
 import xyz.sk7z.fastuse.player_options.PlayerDrinkOptions;
 import xyz.sk7z.fastuse.player_options.PlayerEatOptions;
@@ -50,13 +52,18 @@ public class DrinkListener extends ListenerFrame {
 
 
 
+
         if (playerDrinkOptions.isEnabled()) {
             if (usedItem != null && isNormalPotion(usedItem)) {
-                event.setCancelled(true);
+
+                //もし食べ初めならキャンセルしない(チェストなどを開けるため)
+                if (playerDrinkOptions.isAlreadyStarted()) {
+                    event.setCancelled(true);
+                }
+
                 player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_DRINK, 10, 1);
                 if (canDrink(player)) {
                     if (nmsItemStack.getItem() instanceof ItemPotion) {
-
 
                         ItemPotion nmsItemPotion = (ItemPotion) nmsItemStack.getItem();
                         //ItemFoodクラスのbメソッドを参照して飲む
@@ -90,14 +97,14 @@ public class DrinkListener extends ListenerFrame {
 
 
     private boolean canDrink(Player player) {
-        PlayerEatOptions playerEatValues = plg.getPlayerValues(player).getPlayerEatOptions();
+        PlayerDrinkOptions playerDrinkOption = plg.getPlayerValues(player).getPlayerDrinkOptions();
 
         //飲み始めてから30秒立ってたら拒否
-        if (playerEatValues.getElapsedTimeMillis() >= 30 * 1000) {
-            playerEatValues.setEndTime();
+        if (playerDrinkOption.getElapsedTimeMillis() >= 30 * 1000) {
+            playerDrinkOption.setEndTime();
             return false;
         }
-        return playerEatValues.getElapsedTimeMillis() >= 1.6 * 1000;
+        return playerDrinkOption.getElapsedTimeMillis() >= 1.6 * 1000;
 
     }
 }
