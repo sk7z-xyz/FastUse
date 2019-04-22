@@ -16,7 +16,7 @@ import xyz.sk7z.fastuse.player_options.PlayerGlideOptions;
 
 
 public class GlideListener extends ListenerFrame {
-    FastUse plg;
+    private FastUse plg;
 
     public GlideListener(PluginFrame plg_, String name_) {
         super(plg_, name_);
@@ -43,7 +43,7 @@ public class GlideListener extends ListenerFrame {
             //エリトラを開いていなくてかつ 空中にいる場合のみ実行する
             if (!player.isGliding() && !player.isOnGround()) {
                 if (chestPlate_Item != null && usedItem != null) {
-                    if (player.getInventory().getChestplate().getType() == Material.ELYTRA && event.getItem().getType() == Material.FIREWORK_ROCKET) {
+                    if (chestPlate_Item.getType() == Material.ELYTRA && usedItem.getType() == Material.FIREWORK_ROCKET) {
                         Location l = player.getLocation();
                         player.teleport(l);
                         player.setGliding(true);
