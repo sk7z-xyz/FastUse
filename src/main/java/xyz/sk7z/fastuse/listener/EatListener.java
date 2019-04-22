@@ -2,16 +2,23 @@ package xyz.sk7z.fastuse.listener;
 
 import jp.minecraftuser.ecoframework.ListenerFrame;
 import jp.minecraftuser.ecoframework.PluginFrame;
-import net.minecraft.server.v1_13_R2.BlockAnvil;
-import net.minecraft.server.v1_13_R2.BlockPropertySlabType;
-import net.minecraft.server.v1_13_R2.ItemFood;
-import net.minecraft.server.v1_13_R2.ItemSoup;
+import net.minecraft.server.v1_13_R2.*;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.Chest;
+import org.bukkit.block.EnderChest;
+import org.bukkit.block.Hopper;
+import org.bukkit.block.data.Openable;
+import org.bukkit.block.data.type.EndPortalFrame;
 import org.bukkit.craftbukkit.v1_13_R2.CraftWorld;
+import org.bukkit.craftbukkit.v1_13_R2.block.CraftBlock;
+import org.bukkit.craftbukkit.v1_13_R2.block.data.CraftBlockData;
+import org.bukkit.craftbukkit.v1_13_R2.block.data.type.CraftEndPortalFrame;
 import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_13_R2.util.CraftMagicNumbers;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -19,7 +26,9 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.Door;
 import xyz.sk7z.fastuse.FastUse;
+import xyz.sk7z.fastuse.FastUseUtils;
 import xyz.sk7z.fastuse.player_options.PlayerEatOptions;
 
 
@@ -41,6 +50,7 @@ public class EatListener extends ListenerFrame {
         Player player = event.getPlayer();
         PlayerEatOptions playerEatOptions = plg.getPlayerValues(player).getPlayerEatOptions();
         ItemStack usedItem = event.getItem();
+        Block clickedBlock = event.getClickedBlock();
         //spigotのItemStackをNMS(net.minecraft.server)ItemStackに変換する
         net.minecraft.server.v1_13_R2.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(usedItem);
 
@@ -50,13 +60,19 @@ public class EatListener extends ListenerFrame {
         }
 
 
+        if (clickedBlock != null) {
+            //もし種植目的なら無視
+            if (FastUseUtils.isPlaceFoodSeed(clickedBlock, event.getItem()) || FastUseUtils.isOpenableBlock(clickedBlock)) {
+                return;
+            }
+
+        }
+
+
         if (playerEatOptions.isEnabled()) {
             if (usedItem != null && isFood(usedItem) && (isHungry(player) || canSatietyEat(usedItem))) {
-                //もし食べ初めならキャンセルしない(チェストなどを開けるため)
-                if (playerEatOptions.isAlreadyStarted()) {
-                    event.setCancelled(true);
-                }
-                player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EAT, 10, 1);
+                event.setCancelled(true);
+                player.getWorld().playSound(player.getLocation(), Sound.ENTITY_GENERIC_EAT, 10, 1);
                 if (canEat(player)) {
                     if (nmsItemStack.getItem() instanceof ItemFood) {
 
@@ -70,8 +86,8 @@ public class EatListener extends ListenerFrame {
                         if (nmsItemFood instanceof ItemSoup) {
                             player.getInventory().addItem(new ItemStack(Material.BOWL, 1));
                         }
-
                         playerEatOptions.setEndTime();
+
 
                     }
 
@@ -128,6 +144,8 @@ public class EatListener extends ListenerFrame {
         return playerEatValues.getElapsedTimeMillis() >= 1.6 * 1000;
 
     }
+
+
 
 
 }

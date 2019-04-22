@@ -7,6 +7,7 @@ import net.minecraft.server.v1_13_R2.ItemPotion;
 import net.minecraft.server.v1_13_R2.ItemSplashPotion;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_13_R2.CraftWorld;
 import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftItemStack;
@@ -19,9 +20,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Chest;
 import org.bukkit.material.Door;
 import xyz.sk7z.fastuse.FastUse;
+import xyz.sk7z.fastuse.FastUseUtils;
 import xyz.sk7z.fastuse.player_options.PlayerDrinkOptions;
 import xyz.sk7z.fastuse.player_options.PlayerEatOptions;
-
 
 
 public class DrinkListener extends ListenerFrame {
@@ -43,25 +44,23 @@ public class DrinkListener extends ListenerFrame {
         ItemStack usedItem = event.getItem();
         //spigotのItemStackをNMS(net.minecraft.server)ItemStackに変換する
         net.minecraft.server.v1_13_R2.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(usedItem);
+        Block clickedBlock = event.getClickedBlock();
 
         //右クリック以外は無視
         if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK) {
             return;
         }
 
-
-
+        if (clickedBlock != null && FastUseUtils.isOpenableBlock(clickedBlock)) {
+            return;
+        }
 
 
         if (playerDrinkOptions.isEnabled()) {
             if (usedItem != null && isNormalPotion(usedItem)) {
+                event.setCancelled(true);
 
-                //もし食べ初めならキャンセルしない(チェストなどを開けるため)
-                if (playerDrinkOptions.isAlreadyStarted()) {
-                    event.setCancelled(true);
-                }
-
-                player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_DRINK, 10, 1);
+                player.getWorld().playSound(player.getLocation(), Sound.ENTITY_GENERIC_DRINK, 10, 1);
                 if (canDrink(player)) {
                     if (nmsItemStack.getItem() instanceof ItemPotion) {
 
