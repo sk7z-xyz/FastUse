@@ -17,12 +17,9 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.Chest;
-import org.bukkit.material.Door;
 import xyz.sk7z.fastuse.FastUse;
 import xyz.sk7z.fastuse.FastUseUtils;
 import xyz.sk7z.fastuse.player_options.PlayerDrinkOptions;
-import xyz.sk7z.fastuse.player_options.PlayerEatOptions;
 
 
 public class DrinkListener extends ListenerFrame {
