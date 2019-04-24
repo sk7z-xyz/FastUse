@@ -9,6 +9,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import xyz.sk7z.fastuse.CommandType;
 import xyz.sk7z.fastuse.FastUse;
+import xyz.sk7z.fastuse.TimeSync;
 import xyz.sk7z.fastuse.player_options.PlayerOptions;
 
 /**
@@ -101,6 +102,10 @@ public class FastUseCommand extends CommandFrame {
                     break;
                 case STATUS:
                     ServerStatusCommand.showStatus(plg, player);
+                    break;
+                case TIMESYNC:
+                    Utl.sendPluginMessage(plg,player,"TIMESYNC:" +TimeSync.isEnabled());
+                    break;
             }
             return true;
         }
@@ -137,6 +142,14 @@ public class FastUseCommand extends CommandFrame {
             case SOUND:
                 options.getPlayerShotBowOptions().setSoundEnabled(enabled);
                 options.getPlayerShotTridentOptions().setSoundEnabled(enabled);
+                break;
+            case TIMESYNC:
+                if(player.isOp()) {
+                    TimeSync.setEnabled(enabled);
+                }else{
+                    Utl.sendPluginMessage(plg, player, "権限が足りません");
+                    return true;
+                }
                 break;
             default:
                 Utl.sendPluginMessage(plg, player, "引数が異常です->" + commandType);
