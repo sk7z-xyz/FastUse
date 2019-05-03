@@ -61,7 +61,7 @@ public class EatListener extends ListenerFrame {
         if (playerEatOptions.isEnabled()) {
             if (usedItem != null && isFood(usedItem) && (isHungry(player) || canSatietyEat(usedItem))) {
                 event.setCancelled(true);
-                player.getWorld().playSound(player.getLocation(), Sound.ENTITY_GENERIC_EAT, 10, 1);
+                player.getWorld().playSound(player.getLocation(), Sound.ENTITY_GENERIC_EAT, 1f, 1);
                 if (canEat(player)) {
                     if (nmsItemStack.getItem() instanceof ItemFood) {
 

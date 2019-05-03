@@ -57,7 +57,7 @@ public class DrinkListener extends ListenerFrame {
             if (usedItem != null && isNormalPotion(usedItem)) {
                 event.setCancelled(true);
 
-                player.getWorld().playSound(player.getLocation(), Sound.ENTITY_GENERIC_DRINK, 10, 1);
+                player.getWorld().playSound(player.getLocation(), Sound.ENTITY_GENERIC_DRINK, 1, 1);
                 if (canDrink(player)) {
                     if (nmsItemStack.getItem() instanceof ItemPotion) {
 
