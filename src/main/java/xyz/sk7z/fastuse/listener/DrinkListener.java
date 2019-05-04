@@ -48,7 +48,7 @@ public class DrinkListener extends ListenerFrame {
             return;
         }
 
-        if (clickedBlock != null && FastUseUtils.isOpenableBlock(clickedBlock)) {
+        if (clickedBlock != null && FastUseUtils.isCanRightClockBlock(clickedBlock)) {
             return;
         }
 

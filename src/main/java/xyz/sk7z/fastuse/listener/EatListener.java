@@ -51,7 +51,7 @@ public class EatListener extends ListenerFrame {
 
         if (clickedBlock != null) {
             //もし種植目的なら無視
-            if (FastUseUtils.isPlaceFoodSeed(clickedBlock, event.getItem()) || FastUseUtils.isOpenableBlock(clickedBlock)) {
+            if (FastUseUtils.isPlaceFoodSeed(clickedBlock, event.getItem()) || FastUseUtils.isCanRightClockBlock(clickedBlock)) {
                 return;
             }
 
