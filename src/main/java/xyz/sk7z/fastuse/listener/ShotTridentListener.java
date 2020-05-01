@@ -2,8 +2,8 @@ package xyz.sk7z.fastuse.listener;
 
 import jp.minecraftuser.ecoframework.ListenerFrame;
 import jp.minecraftuser.ecoframework.PluginFrame;
-import net.minecraft.server.v1_13_R2.ItemTrident;
-import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftItemStack;
+import net.minecraft.server.v1_15_R1.ItemTrident;
+import org.bukkit.craftbukkit.v1_15_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -31,6 +31,7 @@ public class ShotTridentListener extends ListenerFrame {
     // 右クリを離したタイミングで発射するので チャージ開始時間を記録するだけ
     @EventHandler(priority = EventPriority.LOW)
     public void PlayerInteract(PlayerInteractEvent event) {
+
 
         Player player = event.getPlayer();
         ItemStack usedItem = event.getItem();
@@ -61,7 +62,7 @@ public class ShotTridentListener extends ListenerFrame {
         /*
         if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
             AbstractPlayerShotOptions shotValues = plg.getPlayerValues(player).getPlayerShotTridentOptions();
-            net.minecraft.server.v1_13_R2.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(usedItem);
+            net.minecraft.server.v1_15_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(usedItem);
             if (usedItem != null && isTrident(usedItem)) {
                 if (nmsItemStack.getItem() instanceof ItemTrident) {
 

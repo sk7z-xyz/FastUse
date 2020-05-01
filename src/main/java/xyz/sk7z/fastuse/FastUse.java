@@ -14,11 +14,14 @@ import java.util.UUID;
 public class FastUse extends PluginFrame {
 
     HashMap<UUID, PlayerOptions> playerValuesList = null;
+    HashMap<UUID, PlayerEatManager> PlayerEatManagerList = null;
 
     @Override
     public void onEnable() {
         initialize();
+        FastUseUtils.plugin = this;
         playerValuesList = new HashMap<>();
+        PlayerEatManagerList = new HashMap<>();
         Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Lag(), 100L, 1L);
         Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new TimeSync(this), 100L, 5L);
 
@@ -48,7 +51,7 @@ public class FastUse extends PluginFrame {
         registerPluginListener(new AttackListener(this, "player"));
         registerPluginListener(new ShotBowListener(this, "player"));
         registerPluginListener(new ShotTridentListener(this,"player"));
-        registerPluginListener(new EatListener(this, "player"));
+        registerPluginListener(new FoodListener(this, "player"));
         registerPluginListener(new DrinkListener(this, "player"));
         registerPluginListener(new GlideListener(this, "player"));
         registerPluginListener(new PlayerHeadChangeListener(this, "player"));
@@ -59,9 +62,15 @@ public class FastUse extends PluginFrame {
 
     public PlayerOptions getPlayerValues(Player player) {
         if (!playerValuesList.containsKey(player.getUniqueId())) {
-            playerValuesList.put(player.getUniqueId(), new PlayerOptions());
+            playerValuesList.put(player.getUniqueId(), new PlayerOptions(this,player));
         }
         return playerValuesList.get(player.getUniqueId());
+    }
+    public PlayerEatManager getPlayerEatManager(Player player) {
+        if (!PlayerEatManagerList.containsKey(player.getUniqueId())) {
+            PlayerEatManagerList.put(player.getUniqueId(), new PlayerEatManager(this,player));
+        }
+        return PlayerEatManagerList.get(player.getUniqueId());
     }
 
 

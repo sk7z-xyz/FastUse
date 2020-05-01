@@ -71,7 +71,7 @@ public class FastUseCommand extends CommandFrame {
         if (args.length == 1) {
             switch (commandType) {
                 case EAT:
-                    Utl.sendPluginMessage(plg, player, "EAT:" + options.getPlayerEatOptions().isEnabled());
+                    Utl.sendPluginMessage(plg, player, "EAT:" + options.getPlayerFoodOptions().isEnabled());
                     break;
                 case DRINK:
                     Utl.sendPluginMessage(plg, player, "DRINK:" + options.getPlayerDrinkOptions().isEnabled());
@@ -92,7 +92,7 @@ public class FastUseCommand extends CommandFrame {
                     Utl.sendPluginMessage(plg, player, "SOUND:" + options.getPlayerShotBowOptions().isSoundEnabled());
                     break;
                 case INFO:
-                    Utl.sendPluginMessage(plg, player, "EAT:" + options.getPlayerEatOptions().isEnabled());
+                    Utl.sendPluginMessage(plg, player, "FOOD:" + options.getPlayerFoodOptions().isEnabled());
                     Utl.sendPluginMessage(plg, player, "DRINK:" + options.getPlayerDrinkOptions().isEnabled());
                     Utl.sendPluginMessage(plg, player, "GLIDE:" + options.getPlayerGlideOptions().isEnabled());
                     Utl.sendPluginMessage(plg, player, "ATTACK:" + options.getPlayerAttackOptions().isEnabled());
@@ -122,7 +122,7 @@ public class FastUseCommand extends CommandFrame {
 
         switch (commandType) {
             case EAT:
-                options.getPlayerEatOptions().setEnabled(enabled);
+                options.getPlayerFoodOptions().setEnabled(enabled);
                 break;
             case DRINK:
                 options.getPlayerDrinkOptions().setEnabled(enabled);

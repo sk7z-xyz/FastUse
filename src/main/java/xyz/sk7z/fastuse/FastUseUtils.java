@@ -1,19 +1,106 @@
 package xyz.sk7z.fastuse;
 
-import net.minecraft.server.v1_13_R2.*;
+import net.minecraft.server.v1_15_R1.*;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.v1_13_R2.block.CraftBlock;
-import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_15_R1.block.CraftBlock;
+import org.bukkit.craftbukkit.v1_15_R1.inventory.CraftItemStack;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import xyz.sk7z.fastuse.player_options.PlayerFoodOptions;
 
 public class FastUseUtils {
-    public static boolean isPlaceFoodSeed(Block clickedBlock, ItemStack item) {
-        return clickedBlock.getType() == Material.FARMLAND && CraftItemStack.asNMSCopy(item).getItem() instanceof ItemSeedFood;
+    public static FastUse plugin;
+
+    public static boolean isPlaceFoodSeed(ItemStack item, Block clickedBlock) {
+        if(item == null || clickedBlock == null){
+            return false;
+        }
+        if (item.getType() == Material.SWEET_BERRIES) {
+            switch (clickedBlock.getType()){
+                case GRASS_BLOCK:
+                case DIRT:
+                case PODZOL:
+                    return true;
+            }
+        } else if (clickedBlock.getType() == Material.FARMLAND) {
+            switch (item.getType()) {
+                case POTATO:
+                case CARROT:
+                    return true;
+            }
+        }
+        return false;
     }
 
+    public static boolean isFood(ItemStack item) {
+        net.minecraft.server.v1_15_R1.ItemStack itemStack = CraftItemStack.asNMSCopy(item);
+        return itemStack.getItem().isFood();
+    }
+    public static boolean isFoodSoup(ItemStack item) {
+        switch (item.getType()) {
+            case MUSHROOM_STEW:
+            case BEETROOT_SOUP:
+            case RABBIT_STEW:
+            case SUSPICIOUS_STEW:
+                return true;
+        }
+        return false;
+    }
+
+    public static boolean isDrink(ItemStack item) {
+        net.minecraft.server.v1_15_R1.ItemStack itemStack = CraftItemStack.asNMSCopy(item);
+
+        if (itemStack.getItem() instanceof ItemPotion) {
+            //スプラッシュポーションと残留ポーションはfalse
+            return !(itemStack.getItem() instanceof ItemLingeringPotion) && !(itemStack.getItem() instanceof ItemSplashPotion);
+        } else {
+            return false;
+        }
+    }
+
+    public static ItemStack getUsedFoodItemFromPlayer(Player player) {
+        ItemStack itemStack;
+        itemStack = player.getInventory().getItemInMainHand();
+        if (!FastUseUtils.isFood(itemStack) && !FastUseUtils.isDrink(itemStack)) {
+            itemStack = player.getInventory().getItemInOffHand();
+            if (!FastUseUtils.isFood(itemStack) && !FastUseUtils.isDrink(itemStack)) {
+                itemStack = new ItemStack(Material.AIR);
+            }
+        }
+
+        return itemStack;
+    }
+    public static boolean isPlayerhungry(Player player) {
+        return player.getFoodLevel() < 20;
+    }
+    //満腹でも食べられるアイテムか 英語わかんねー
+    public static boolean isSatietyFood(ItemStack item) {
+
+        switch (item.getType()) {
+            case GOLDEN_APPLE:
+            case ENCHANTED_GOLDEN_APPLE:
+            case CHORUS_FRUIT:
+                return true;
+        }
+        return false;
+    }
+
+    public static boolean canPlayerEatTime(Player player) {
+
+        PlayerFoodOptions playerFoodOptions = plugin.getPlayerValues(player).getPlayerFoodOptions();
+        //食べ始めてから30秒立ってたら拒否
+        if (playerFoodOptions.getElapsedTimeMillis() >= 30 * 1000) {
+            playerFoodOptions.setEndTime();
+            return false;
+        }
+        return playerFoodOptions.getElapsedTimeMillis() >= 1.6 * 1000;
+
+    }
+
+
     public static boolean isCanRightClockBlock(Block block) {
-        net.minecraft.server.v1_13_R2.Block nmsBlock = ((CraftBlock) block).getNMS().getBlock();
+        net.minecraft.server.v1_15_R1.Block nmsBlock = ((CraftBlock) block).getNMS().getBlock();
         return
                 //GUI開く系
                 nmsBlock instanceof BlockChest ||

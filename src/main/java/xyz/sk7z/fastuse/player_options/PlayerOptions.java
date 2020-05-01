@@ -1,19 +1,23 @@
 package xyz.sk7z.fastuse.player_options;
 
 
+import org.bukkit.entity.Player;
+import xyz.sk7z.fastuse.FastUse;
+
 public class PlayerOptions {
     private PlayerAttackOptions playerAttackOptions;
     private PlayerDrinkOptions playerDrinkOptions;
-    private PlayerEatOptions playerEatOptions;
+    private PlayerFoodOptions playerFoodOptions;
     private PlayerGlideOptions playerGlideOptions;
     private PlayerShotBowOptions playerShotBowOptions;
     private PlayerShotTridentOptions playerShotTridentOptions;
 
 
-    public PlayerOptions() {
+
+    public PlayerOptions(FastUse plg, Player player) {
         this.playerAttackOptions = new PlayerAttackOptions();
         this.playerDrinkOptions = new PlayerDrinkOptions();
-        this.playerEatOptions = new PlayerEatOptions();
+        this.playerFoodOptions = new PlayerFoodOptions();
         this.playerGlideOptions = new PlayerGlideOptions();
         this.playerShotBowOptions = new PlayerShotBowOptions();
         this.playerShotTridentOptions = new PlayerShotTridentOptions();
@@ -27,8 +31,8 @@ public class PlayerOptions {
         return playerDrinkOptions;
     }
 
-    public PlayerEatOptions getPlayerEatOptions() {
-        return playerEatOptions;
+    public PlayerFoodOptions getPlayerFoodOptions() {
+        return playerFoodOptions;
     }
 
     public PlayerGlideOptions getPlayerGlideOptions() {
