@@ -35,7 +35,7 @@ public class PlayerHeadChangeListener extends ListenerFrame {
         if (block.getType() != Material.CARROTS) {
             return;
         }
-        if (event.getItem().getType() == Material.PLAYER_HEAD) {
+        if (event.getItem() != null && event.getItem().getType() == Material.PLAYER_HEAD) {
             item_skull = event.getItem();
         } else {
             return;
