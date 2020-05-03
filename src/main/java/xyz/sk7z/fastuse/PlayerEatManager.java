@@ -10,24 +10,26 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import xyz.sk7z.fastuse.player_options.PlayerFoodOptions;
 
+import java.util.UUID;
 import java.util.logging.Level;
 
 
 public class PlayerEatManager {
     private FastUse plg;
-    private Player player;
+    private UUID player_uuid;
     private ItemStack itemStack;
     private org.bukkit.scheduler.BukkitTask bukkitTask;
 
 
     public PlayerEatManager(FastUse plg, Player player) {
         this.plg = plg;
-        this.player = player;
+        this.player_uuid = player.getUniqueId();
     }
 
     //食事を開始する
     public void EatStart() {
         //Utl.sendPluginMessage(plg, player,"Eat Start");
+        Player player = plg.getServer().getPlayer(player_uuid);
         ItemStack itemStack = FastUseUtils.getUsedFoodItemFromPlayer(player);
 
         if (itemStack == null || !(FastUseUtils.isFood(itemStack) || FastUseUtils.isDrink(itemStack))) {
