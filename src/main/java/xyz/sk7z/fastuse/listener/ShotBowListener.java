@@ -42,6 +42,13 @@ public class ShotBowListener extends ListenerFrame {
         }
 
         Player player = (Player) event.getEntity();
+        ItemStack usedItem = event.getBow();
+
+        //弓以外(クロスボウ)の場合は何もしない
+        if(usedItem != null && !isBow(usedItem)){
+            return;
+        }
+
         PlayerShotBowOptions playerShotBowOptions = plg.getPlayerValues(player).getPlayerShotBowOptions();
         if (!playerShotBowOptions.isEnabled()) {
             return;
@@ -63,9 +70,6 @@ public class ShotBowListener extends ListenerFrame {
             event.getProjectile().remove();
             //player.sendMessage("バニラの発射をキャンセルしました");
         }
-
-
-        ItemStack usedItem = event.getBow();
 
         //spigotのItemStackをNMS(net.minecraft.server)ItemStackに変換する
         net.minecraft.server.v1_15_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(usedItem);
