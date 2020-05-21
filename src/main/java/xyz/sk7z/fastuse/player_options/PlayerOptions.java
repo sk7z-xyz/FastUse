@@ -11,6 +11,7 @@ public class PlayerOptions {
     private PlayerGlideOptions playerGlideOptions;
     private PlayerShotBowOptions playerShotBowOptions;
     private PlayerShotTridentOptions playerShotTridentOptions;
+    private PlayerChairOptions playerChairOptions;
 
 
 
@@ -21,6 +22,7 @@ public class PlayerOptions {
         this.playerGlideOptions = new PlayerGlideOptions();
         this.playerShotBowOptions = new PlayerShotBowOptions();
         this.playerShotTridentOptions = new PlayerShotTridentOptions();
+        this.playerChairOptions = new PlayerChairOptions();
     }
 
     public PlayerAttackOptions getPlayerAttackOptions() {
@@ -45,5 +47,9 @@ public class PlayerOptions {
 
     public PlayerShotTridentOptions getPlayerShotTridentOptions() {
         return playerShotTridentOptions;
+    }
+
+    public PlayerChairOptions getPlayerChairOptions() {
+        return playerChairOptions;
     }
 }

@@ -1,8 +1,10 @@
 package xyz.sk7z.fastuse;
 
 import net.minecraft.server.v1_15_R1.*;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.craftbukkit.v1_15_R1.block.CraftBlock;
 import org.bukkit.craftbukkit.v1_15_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
@@ -126,6 +128,18 @@ public class FastUseUtils {
                         nmsBlock instanceof BlockBed ||
                         //nmsBlock instanceof BlockJukeBox || NG
                         nmsBlock instanceof BlockNote;
+
+
+    }
+
+    public static boolean isChairBlock(Block block) {
+        net.minecraft.server.v1_15_R1.Block nmsBlock = ((CraftBlock) block).getNMS().getBlock();
+        if(nmsBlock instanceof BlockStairs){
+            String dataStr = "[half=bottom]";
+            BlockData data = Bukkit.createBlockData(block.getType(), dataStr);
+            return block.getBlockData().matches(data);
+        }
+        return false;
 
 
     }
