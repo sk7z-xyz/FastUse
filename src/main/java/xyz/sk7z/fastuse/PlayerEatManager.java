@@ -41,7 +41,7 @@ public class PlayerEatManager {
             this.itemStack = itemStack;
             //Utl.sendPluginMessage(plg, player,"Timer is null or Cancelled");
             //Utl.sendPluginMessage(plg, player,"Timer Start");
-            bukkitTask = (new PlayerEatScheduler(plg, player, this.itemStack)).runTaskTimer(plg, 4, 1);
+            bukkitTask = (new PlayerEatScheduler(plg, player, this.itemStack)).runTaskTimer(plg, 1, 1);
         } else {
             //タスクが存在している場合
             if (this.itemStack.getType().equals(itemStack.getType())) {
@@ -54,7 +54,7 @@ public class PlayerEatManager {
                 bukkitTask.cancel();
                 //Utl.sendPluginMessage(plg, player, "Timer is already started but item changed");
                 //Utl.sendPluginMessage(plg, player, "Timer Start");
-                bukkitTask = (new PlayerEatScheduler(plg, player, this.itemStack)).runTaskTimer(plg, 4, 1);
+                bukkitTask = (new PlayerEatScheduler(plg, player, this.itemStack)).runTaskTimer(plg, 1, 1);
             }
 
         }
@@ -74,6 +74,7 @@ class PlayerEatScheduler extends BukkitRunnable {
         this.player = player;
         this.eatItem = eatItem;
         this.playerEatValues = plg.getPlayerValues(player).getPlayerFoodOptions();
+        playerEatValues.setStartTime();
     }
 
     public void run() {
