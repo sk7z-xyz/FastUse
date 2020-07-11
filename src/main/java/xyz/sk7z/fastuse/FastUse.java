@@ -22,8 +22,9 @@ public class FastUse extends PluginFrame {
         FastUseUtils.plugin = this;
         playerValuesList = new HashMap<>();
         PlayerEatManagerList = new HashMap<>();
-        Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Lag(), 100L, 1L);
-        Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new TimeSync(this), 100L, 5L);
+        Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Lag(), 1L, 1L);
+        Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new TimeSync(this), 110L, 5L);
+        Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new TpsBar(this), 1, 1L);
 
     }
 

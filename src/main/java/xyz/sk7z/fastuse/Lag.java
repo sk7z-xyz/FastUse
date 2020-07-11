@@ -15,7 +15,7 @@ public class Lag
 
     public static double getTPS(int ticks) {
         if (TICK_COUNT < ticks) {
-            return 20.0D;
+            ticks = TICK_COUNT-1;
         }
         int target = (TICK_COUNT - 1 - ticks) % TICKS.length;
         long elapsed = System.currentTimeMillis() - TICKS[target];
