@@ -2,6 +2,7 @@ package xyz.sk7z.fastuse.listener;
 
 import jp.minecraftuser.ecoframework.ListenerFrame;
 import jp.minecraftuser.ecoframework.PluginFrame;
+import net.minecraft.server.v1_15_R1.EntityArrow;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Arrow;
@@ -50,6 +51,15 @@ public class ChairListener extends ListenerFrame {
         }
 
         Location loc = clickedBlock.getLocation().setDirection(player.getLocation().getDirection()).add(new Vector(0.5, 0, 0.5));
+        loc.getWorld().getNearbyEntities(loc,0.1,0.1,0.1).forEach(entity -> {
+            if(entity.getType() == EntityType.ARROW){
+                if(((EntityArrow) entity).passengers.size() > 0){
+                    //椅子に座ってる人がいるならキャンセル
+                    return;
+                }
+            }
+        });
+
         player.teleport(loc.clone().add(0, 1, 0));//先にプレイヤーを飛ばして着地させておく FlyKick対策
         new PlayerChairScheduler(plg, player, loc).runTaskTimer(plg, 2, 1);
         event.setCancelled(true);
