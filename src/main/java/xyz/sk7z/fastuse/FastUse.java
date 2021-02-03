@@ -5,6 +5,9 @@ import jp.minecraftuser.ecoframework.PluginFrame;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import xyz.sk7z.fastuse.command.FastUseCommand;
+import xyz.sk7z.fastuse.command.PlayerConfigCommand;
+import xyz.sk7z.fastuse.command.ServerStatusCommand;
+import xyz.sk7z.fastuse.command.TimeSyncCommand;
 import xyz.sk7z.fastuse.listener.*;
 import xyz.sk7z.fastuse.player_options.PlayerOptions;
 
@@ -41,7 +44,10 @@ public class FastUse extends PluginFrame {
 
     @Override
     public void initializeCommand() {
-        CommandFrame cmd = new FastUseCommand(this, "fu");
+        CommandFrame cmd = new FastUseCommand(this,"fu");
+        cmd.addCommand(new PlayerConfigCommand(this,"conf"));
+        cmd.addCommand(new ServerStatusCommand(this,"status"));
+        cmd.addCommand(new TimeSyncCommand(this,"timesync"));
         registerPluginCommand(cmd);
     }
 
@@ -50,7 +56,7 @@ public class FastUse extends PluginFrame {
     public void initializeListener() {
         registerPluginListener(new AttackListener(this, "player"));
         registerPluginListener(new ShotBowListener(this, "player"));
-        registerPluginListener(new ShotTridentListener(this,"player"));
+        registerPluginListener(new ShotTridentListener(this, "player"));
         registerPluginListener(new FoodListener(this, "player"));
         registerPluginListener(new DrinkListener(this, "player"));
         registerPluginListener(new GlideListener(this, "player"));
@@ -63,13 +69,14 @@ public class FastUse extends PluginFrame {
 
     public PlayerOptions getPlayerValues(Player player) {
         if (!playerValuesList.containsKey(player.getUniqueId())) {
-            playerValuesList.put(player.getUniqueId(), new PlayerOptions(this,player));
+            playerValuesList.put(player.getUniqueId(), new PlayerOptions(this, player));
         }
         return playerValuesList.get(player.getUniqueId());
     }
+
     public PlayerEatManager getPlayerEatManager(Player player) {
         if (!PlayerEatManagerList.containsKey(player.getUniqueId())) {
-            PlayerEatManagerList.put(player.getUniqueId(), new PlayerEatManager(this,player));
+            PlayerEatManagerList.put(player.getUniqueId(), new PlayerEatManager(this, player));
         }
         return PlayerEatManagerList.get(player.getUniqueId());
     }

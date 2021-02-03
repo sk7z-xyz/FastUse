@@ -20,9 +20,6 @@ public class FullChargeSound extends BukkitRunnable {
 
     @Override
     public void run() {
-        if (!playerShotValues.isSoundEnabled()) {
-            return;
-        }
         if (playerShotValues instanceof PlayerShotBowOptions) {
             if (Lag.getTickCount() - playerShotValues.getStart_tick() >= 20 || (Lag.getTickCount() - playerShotValues.getStart_tick() >= 5 && playerShotValues.getElapsedTimeMillis() >= 1000)) {
                 player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_HARP, 1, 10);

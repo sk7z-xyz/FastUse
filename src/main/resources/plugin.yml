@@ -1,13 +1,25 @@
 name: FastUse
 main: xyz.sk7z.fastuse.FastUse
 version: ${project.version}
-api-version: 1.13
+api-version: 1.15
 depend: [EcoFramework]
 commands:
   fu:
     description: fastuse command.
-    usage: /<command> [GLIDE,EAT] [ON/OFF]
+    usage: /<command>
     permission: fastuse
+  fu conf:
+    description: fastuse command.
+    usage: /<command> [commandType] [true/false]
+    permission: fastuse.conf
+  fu status:
+    description: fastuse command.
+    usage: /<command>
+    permission: fastuse.status
+  fu timesync:
+    description: fastuse command.
+    usage: /<command> [true/false]
+    permission: fastuse.timesync
 
 
 

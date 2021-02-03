@@ -2,9 +2,8 @@
 package xyz.sk7z.fastuse;
 
 /**
- * 
- * @author ecolight
+ * @author sk7z
  */
 public enum CommandType {
-    ATTACK,DRINK,EAT,GLIDE,BOW,TRIDENT,SOUND,INFO,STATUS,TIMESYNC
+    ATTACK, DRINK, FOOD, GLIDE, BOW, TRIDENT, INFO
 }
