@@ -1,5 +1,6 @@
 package xyz.sk7z.fastuse;
 
+import jp.minecraftuser.ecoframework.Utl;
 import net.minecraft.server.v1_15_R1.EntityLiving;
 import net.minecraft.server.v1_15_R1.Item;
 import org.bukkit.Material;
@@ -87,11 +88,17 @@ class PlayerEatScheduler extends BukkitRunnable {
                 return;
             }
             EntityLiving el = craftPlayer.getHandle();
+            //右クリックが押下されていない場合はキャンセルする
             if (!el.isHandRaised()) {
-                //Utl.sendPluginMessage(plg, player,"Timer canceled: HandRaised is false");
-                playerEatValues.setEndTime();
-                cancel();
-                return;
+                //Utl.sendPluginMessage(plg, player,"HandRaised is false");
+                //食事イベントにより右クリックが解除された場合は対象外
+                if(!playerEatValues.getSkipHandRaisedCheck()){
+                    Utl.sendPluginMessage(plg, player,"Timer canceled: HandRaised is false");
+                    playerEatValues.setEndTime();
+                    cancel();
+                    return;
+                }
+                 //Utl.sendPluginMessage(plg,player,"SkipHandRaisedCheck");
             }
             ItemStack usedItem = FastUseUtils.getUsedFoodItemFromPlayer(player);
             if (!usedItem.getType().equals(eatItem.getType())) {
