@@ -1,6 +1,5 @@
 package xyz.sk7z.fastuse;
 
-import jp.minecraftuser.ecoframework.Utl;
 import net.minecraft.server.v1_15_R1.EntityLiving;
 import net.minecraft.server.v1_15_R1.Item;
 import org.bukkit.Material;
@@ -93,7 +92,7 @@ class PlayerEatScheduler extends BukkitRunnable {
                 //Utl.sendPluginMessage(plg, player,"HandRaised is false");
                 //食事イベントにより右クリックが解除された場合は対象外
                 if(!playerEatValues.getSkipHandRaisedCheck()){
-                    Utl.sendPluginMessage(plg, player,"Timer canceled: HandRaised is false");
+                    //Utl.sendPluginMessage(plg, player,"Timer canceled: HandRaised is false");
                     playerEatValues.setEndTime();
                     cancel();
                     return;
