@@ -7,9 +7,7 @@ public abstract class AbstractTimer {
 
     Instant charge_start_time;
 
-
     protected AbstractTimer() {
-
     }
 
     public Long getElapsedTimeMillis() {
@@ -30,6 +28,4 @@ public abstract class AbstractTimer {
     public void setEndTime() {
         charge_start_time = null;
     }
-
-
 }

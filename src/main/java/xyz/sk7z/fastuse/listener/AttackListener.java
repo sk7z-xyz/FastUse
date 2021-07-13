@@ -21,7 +21,6 @@ public class AttackListener extends ListenerFrame {
     public AttackListener(PluginFrame plg_, String name_) {
         super(plg_, name_);
         plg = (FastUse) plg_;
-
     }
 
     @EventHandler(priority = EventPriority.LOW)
@@ -61,7 +60,6 @@ public class AttackListener extends ListenerFrame {
             player_attack_speed = Math.max(player_attack_speed, 4);//最低は4(20TPS)
             player_attack_speed = Math.min(player_attack_speed, 10);//最大は20(5TPS)
             player.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(player_attack_speed);
-
         } else {
             player.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(4);
         }

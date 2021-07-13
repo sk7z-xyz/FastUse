@@ -24,13 +24,10 @@ public class ChairListener extends ListenerFrame {
 
     FastUse plg;
 
-
     public ChairListener(PluginFrame plg_, String name_) {
         super(plg_, name_);
         this.plg = (FastUse) plg_;
-
     }
-
 
     @EventHandler(priority = EventPriority.LOW)
     public void PlayerInteract(PlayerInteractEvent event) {
@@ -65,7 +62,6 @@ public class ChairListener extends ListenerFrame {
 
         event.setCancelled(true);
     }
-
 }
 
 class PlayerChairScheduler extends BukkitRunnable {
@@ -99,7 +95,7 @@ class PlayerChairScheduler extends BukkitRunnable {
             arrow.remove();
             if (playerChairOptions.getArrow() == arrow) {
                 //プレイヤーとの距離を測り､コマンドによる移動でなければ､プレイヤーを1マス上にテレポートさせる
-                if(player.getLocation().distance(spawn_loc) < 2f) {
+                if (player.getLocation().distance(spawn_loc) < 2f) {
                     player.teleport(spawn_loc.setDirection(player.getLocation().getDirection()).add(0, 1, 0));
                 }
             }
@@ -111,7 +107,7 @@ class PlayerChairScheduler extends BukkitRunnable {
             arrow.remove();
             if (playerChairOptions.getArrow() == arrow) {
                 //プレイヤーとの距離を測り､コマンドによる移動でなければ､プレイヤーを1マス上にテレポートさせる
-                if(player.getLocation().distance(spawn_loc) < 2f) {
+                if (player.getLocation().distance(spawn_loc) < 2f) {
                     player.teleport(spawn_loc.setDirection(player.getLocation().getDirection()).add(0, 1, 0));
                 }
             }
@@ -120,7 +116,5 @@ class PlayerChairScheduler extends BukkitRunnable {
         }
         //変化のない場合は矢を延命させる
         arrow.setTicksLived(1);
-
     }
-
 }

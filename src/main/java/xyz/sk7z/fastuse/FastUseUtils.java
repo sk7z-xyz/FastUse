@@ -42,6 +42,7 @@ public class FastUseUtils {
         net.minecraft.world.item.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
         return nmsItemStack.getItem().isFood();
     }
+
     public static boolean isFoodSoup(ItemStack item) {
         switch (item.getType()) {
             case MUSHROOM_STEW:
@@ -73,12 +74,13 @@ public class FastUseUtils {
                 itemStack = new ItemStack(Material.AIR);
             }
         }
-
         return itemStack;
     }
+
     public static boolean isPlayerhungry(Player player) {
         return player.getFoodLevel() < 20;
     }
+
     //満腹でも食べられるアイテムか 英語わかんねー
     public static boolean isSatietyFood(ItemStack item) {
 
@@ -100,9 +102,7 @@ public class FastUseUtils {
             return false;
         }
         return playerFoodOptions.getElapsedTimeMillis() >= 1.6 * 1000;
-
     }
-
 
     public static boolean isCanRightClockBlock(Block block) {
         net.minecraft.world.level.block.Block nmsBlock = ((CraftBlock) block).getNMS().getBlock();
@@ -142,7 +142,5 @@ public class FastUseUtils {
             return block.getBlockData().matches(data);
         }
         return false;
-
-
     }
 }

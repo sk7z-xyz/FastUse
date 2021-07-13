@@ -29,13 +29,10 @@ public class ShotBowListener extends ListenerFrame {
     public ShotBowListener(PluginFrame plg_, String name_) {
         super(plg_, name_);
         this.plg = (FastUse) plg_;
-
-
     }
 
     @EventHandler(priority = EventPriority.LOW)
     public void PlayerShotBowEvent(EntityShootBowEvent event) {
-
 
         if (!(event.getEntity() instanceof Player)) {
             return;
@@ -45,7 +42,7 @@ public class ShotBowListener extends ListenerFrame {
         ItemStack usedItem = event.getBow();
 
         //弓以外(クロスボウ)の場合は何もしない
-        if(usedItem != null && !isBow(usedItem)){
+        if (usedItem != null && !isBow(usedItem)) {
             return;
         }
 
@@ -74,7 +71,6 @@ public class ShotBowListener extends ListenerFrame {
         //spigotのItemStackをNMS(net.minecraft.server)ItemStackに変換する
         net.minecraft.world.item.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(usedItem);
 
-
         if (usedItem != null && isBow(usedItem)) {
             if (nmsItemStack.getItem() instanceof ItemBow) {
 
@@ -84,11 +80,9 @@ public class ShotBowListener extends ListenerFrame {
                 nmsItemBow.a(nmsItemStack, ((CraftWorld) player.getWorld()).getHandle(), ((CraftPlayer) player).getHandle(), (int) (72000 - playerShotBowOptions.getElapsedTimeMillis() / 50));
 
                 playerShotBowOptions.setEndTime();
-
             }
         }
     }
-
 
     /* 右クリを離したタイミングで発射するので チャージ開始時間を記録するだけ */
     @EventHandler(priority = EventPriority.LOW)
@@ -98,12 +92,10 @@ public class ShotBowListener extends ListenerFrame {
         AbstractPlayerShotOptions playerShotBowOptions = plg.getPlayerValues(player).getPlayerShotBowOptions();
         ItemStack usedItem = event.getItem();
 
-
         //右クリック以外は無視
         if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK) {
             return;
         }
-
 
         if (playerShotBowOptions.isEnabled()) {
             if (usedItem != null && isBow(usedItem)) {
@@ -113,26 +105,20 @@ public class ShotBowListener extends ListenerFrame {
                     playerShotBowOptions.setStart_tick(Lag.getTickCount());
 
                     new FullChargeSound(player, plg, playerShotBowOptions).runTaskLater(plg, 5);
-
                 } else {
                     //120秒以上経過してたらやり直し
                     if (playerShotBowOptions.getElapsedTimeMillis() >= 120 * 1000) {
                         playerShotBowOptions.setStartTime();
 
                         new FullChargeSound(player, plg, playerShotBowOptions).runTaskLater(plg, 5);
-
                     }
                 }
             }
-
         }
-
     }
-
 
     private boolean isBow(ItemStack item) {
         return CraftItemStack.asNMSCopy(item).getItem() instanceof ItemBow;
     }
-
 }
 

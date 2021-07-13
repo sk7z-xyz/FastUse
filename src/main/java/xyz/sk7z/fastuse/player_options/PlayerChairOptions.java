@@ -9,10 +9,11 @@ public class PlayerChairOptions implements Options {
     protected PlayerChairOptions() {
     }
 
-    public void setArrow(Arrow arrow){
+    public void setArrow(Arrow arrow) {
         this.arrow = arrow;
     }
-    public Arrow getArrow(){
+
+    public Arrow getArrow() {
         return arrow;
     }
 
@@ -25,6 +26,4 @@ public class PlayerChairOptions implements Options {
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
-
-
 }

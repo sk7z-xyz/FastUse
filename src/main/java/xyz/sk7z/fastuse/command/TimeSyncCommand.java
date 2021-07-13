@@ -31,7 +31,6 @@ public class TimeSyncCommand extends CommandFrame {
         this.plg = (FastUse) plg_;
         setAuthBlock(true);
         setAuthConsole(true);
-
     }
 
     /**
@@ -88,9 +87,10 @@ public class TimeSyncCommand extends CommandFrame {
 
     /**
      * コマンド別タブコンプリート処理
-     * @param sender コマンド送信者インスタンス
-     * @param cmd コマンドインスタンス
-     * @param string コマンド文字列
+     *
+     * @param sender  コマンド送信者インスタンス
+     * @param cmd     コマンドインスタンス
+     * @param string  コマンド文字列
      * @param strings パラメタ文字列配列
      * @return 保管文字列配列
      */
@@ -98,14 +98,13 @@ public class TimeSyncCommand extends CommandFrame {
     protected List<String> getTabComplete(CommandSender sender, Command cmd, String string, String[] strings) {
         ArrayList<String> list = new ArrayList<>();
         if (strings.length == 1) {
-            if("true".startsWith(strings[0].toLowerCase())){
+            if ("true".startsWith(strings[0].toLowerCase())) {
                 list.add("true");
             }
-            if("false".startsWith(strings[0].toLowerCase())){
+            if ("false".startsWith(strings[0].toLowerCase())) {
                 list.add("false");
             }
         }
         return list;
     }
-
 }

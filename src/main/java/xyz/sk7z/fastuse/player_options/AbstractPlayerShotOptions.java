@@ -5,7 +5,6 @@ public abstract class AbstractPlayerShotOptions extends AbstractTimer implements
     private long start_tick;
     private boolean enabled = true;
 
-
     //PlayerValues以外にインスタンスを生成させないようにするためパッケージプライベートにする
     protected AbstractPlayerShotOptions() {
     }

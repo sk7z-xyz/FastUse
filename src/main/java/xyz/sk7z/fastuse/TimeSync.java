@@ -18,21 +18,23 @@ public class TimeSync implements Runnable {
 
     @Override
     public void run() {
-        if(!enabled){
+        if (!enabled) {
             return;
         }
         Calendar calendar = Calendar.getInstance();
         long time = (calendar.get(Calendar.MILLISECOND) + calendar.get(Calendar.SECOND) * 1000 + (calendar.get(Calendar.MINUTE) % 20) * 60 * 1000) / 50;
         plg.getServer().getWorlds().forEach(world -> {
-            if(world.getTime() < time){
+            if (world.getTime() < time) {
                 world.setTime(time);
             }
         });
     }
-    public static void setEnabled(boolean enabled){
+
+    public static void setEnabled(boolean enabled) {
         TimeSync.enabled = enabled;
     }
-    public static boolean isEnabled(){
+
+    public static boolean isEnabled() {
         return enabled;
     }
 }

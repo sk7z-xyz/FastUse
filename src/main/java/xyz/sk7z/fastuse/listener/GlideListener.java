@@ -20,8 +20,7 @@ public class GlideListener extends ListenerFrame {
 
     public GlideListener(PluginFrame plg_, String name_) {
         super(plg_, name_);
-        this.plg = (FastUse)plg_;
-
+        this.plg = (FastUse) plg_;
     }
 
 
@@ -32,9 +31,7 @@ public class GlideListener extends ListenerFrame {
         ItemStack chestPlate_Item = player.getInventory().getChestplate();
         ItemStack usedItem = event.getItem();
 
-
         //右クリック以外は無視
-
         if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK) {
             return;
         }

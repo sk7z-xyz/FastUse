@@ -15,6 +15,4 @@ public class PlayerAttackOptions implements Options {
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
-
-
 }

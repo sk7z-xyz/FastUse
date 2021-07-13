@@ -13,8 +13,6 @@ public class PlayerOptions {
     private PlayerShotTridentOptions playerShotTridentOptions;
     private PlayerChairOptions playerChairOptions;
 
-
-
     public PlayerOptions(FastUse plg, Player player) {
         this.playerAttackOptions = new PlayerAttackOptions();
         this.playerDrinkOptions = new PlayerDrinkOptions();

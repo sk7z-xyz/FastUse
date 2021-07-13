@@ -56,10 +56,8 @@ public class PlayerEatManager {
                 //Utl.sendPluginMessage(plg, player, "Timer Start");
                 bukkitTask = (new PlayerEatScheduler(plg, player, this.itemStack)).runTaskTimer(plg, 1, 1);
             }
-
         }
     }
-
 }
 
 class PlayerEatScheduler extends BukkitRunnable {
@@ -91,13 +89,13 @@ class PlayerEatScheduler extends BukkitRunnable {
             if (!el.isHandRaised()) {
                 //Utl.sendPluginMessage(plg, player,"HandRaised is false");
                 //食事イベントにより右クリックが解除された場合は対象外
-                if(!playerEatValues.getSkipHandRaisedCheck()){
+                if (!playerEatValues.getSkipHandRaisedCheck()) {
                     //Utl.sendPluginMessage(plg, player,"Timer canceled: HandRaised is false");
                     playerEatValues.setEndTime();
                     cancel();
                     return;
                 }
-                 //Utl.sendPluginMessage(plg,player,"SkipHandRaisedCheck");
+                //Utl.sendPluginMessage(plg,player,"SkipHandRaisedCheck");
             }
             ItemStack usedItem = FastUseUtils.getUsedFoodItemFromPlayer(player);
             if (!usedItem.getType().equals(eatItem.getType())) {
@@ -128,14 +126,10 @@ class PlayerEatScheduler extends BukkitRunnable {
                 playerEatValues.setEndTime();
                 playerEatValues.setStartTime();
             }
-
-
         } catch (Exception e) {
             //何かしらの例外が起きた場合は､タイマーをキャンセルさせる｡
             plg.getLogger().log(Level.WARNING, e.toString());
             cancel();
         }
-
     }
-
 }

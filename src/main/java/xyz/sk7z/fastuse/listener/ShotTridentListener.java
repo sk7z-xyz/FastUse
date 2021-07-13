@@ -23,10 +23,7 @@ public class ShotTridentListener extends ListenerFrame {
     public ShotTridentListener(PluginFrame plg_, String name_) {
         super(plg_, name_);
         this.plg = (FastUse) plg_;
-
-
     }
-
 
     // 右クリを離したタイミングで発射するので チャージ開始時間を記録するだけ
     @EventHandler(priority = EventPriority.LOW)
@@ -58,7 +55,6 @@ public class ShotTridentListener extends ListenerFrame {
             }
 
         }
-
         /*
         if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
             AbstractPlayerShotOptions shotValues = plg.getPlayerValues(player).getPlayerShotTridentOptions();
@@ -76,7 +72,6 @@ public class ShotTridentListener extends ListenerFrame {
 
         }
         */
-
     }
 
 
@@ -86,11 +81,8 @@ public class ShotTridentListener extends ListenerFrame {
 
     @EventHandler(priority = EventPriority.LOW)
     public void ProjectileLaunch(ProjectileLaunchEvent event) {
-        if (event.getEntity() == null) {
-            return;
-        }
-        Player player;
 
+        Player player;
 
         if (event.getEntity().getShooter() instanceof Player) {
             player = (Player) event.getEntity().getShooter();
@@ -99,9 +91,6 @@ public class ShotTridentListener extends ListenerFrame {
         }
         PlayerShotTridentOptions playerShotTridentOptions = plg.getPlayerValues(player).getPlayerShotTridentOptions();
         playerShotTridentOptions.setEndTime();
-
     }
-
-
 }
 

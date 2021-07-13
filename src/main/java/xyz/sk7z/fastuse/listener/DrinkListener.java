@@ -21,9 +21,7 @@ public class DrinkListener extends ListenerFrame {
     public DrinkListener(PluginFrame plg_, String name_) {
         super(plg_, name_);
         this.plg = (FastUse) plg_;
-
     }
-
 
     @EventHandler(priority = EventPriority.LOW)
     public void PlayerInteract(PlayerInteractEvent event) {

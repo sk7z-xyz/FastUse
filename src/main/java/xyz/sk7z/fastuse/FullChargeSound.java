@@ -15,7 +15,6 @@ public class FullChargeSound extends BukkitRunnable {
         this.player = player;
         this.plugin = plugin;
         this.playerShotValues = playerShotValues;
-
     }
 
     @Override
@@ -32,9 +31,6 @@ public class FullChargeSound extends BukkitRunnable {
             } else {
                 new FullChargeSound(player, plugin, playerShotValues).runTaskLater(plugin, 1);
             }
-
         }
-
-
     }
 }

@@ -103,7 +103,5 @@ public class ServerStatusCommand extends CommandFrame {
         long end_time = System.nanoTime();
         Utl.sendPluginMessage(plg, sender, "測定時間" + (end_time - start_time) / 1000 / 1000 + "ms");
         return true;
-
     }
-
 }

@@ -68,7 +68,7 @@ public class FoodListener extends ListenerFrame {
                     return;
                 }
                 //吐き出せるほど食料ゲージが溜まっているかチェックして､吐けない場合はFastUseの機能で食べさせる｡
-                if(!checkVomiting(player,useItem)){
+                if (!checkVomiting(player, useItem)) {
                     event.setCancelled(true);
                     return;
                 }
@@ -90,6 +90,7 @@ public class FoodListener extends ListenerFrame {
         player.setSaturation(Math.max(player.getFoodLevel(),
                 player.getSaturation() - foodInfo.getNutrition() * foodInfo.getSaturationModifier() * 2));
     }
+
     //吐き出せるほど食料ゲージがあるか
     private Boolean checkVomiting(Player player, ItemStack it) {
         net.minecraft.world.item.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(it);
@@ -99,6 +100,7 @@ public class FoodListener extends ListenerFrame {
         //5-6 = -1 == false
         return player.getFoodLevel() - foodInfo.getNutrition() >= 0;
     }
+
     //吐き出したアイテムをもとに戻す
     class UndoItem extends BukkitRunnable {
         Player player;
@@ -113,11 +115,10 @@ public class FoodListener extends ListenerFrame {
         @Override
         public void run() {
             //念の為チェック
-            if(FastUseUtils.isFood(itemStack)) {
+            if (FastUseUtils.isFood(itemStack)) {
                 player.getInventory().addItem(itemStack);
             }
         }
     }
-
 }
 

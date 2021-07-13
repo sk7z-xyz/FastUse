@@ -6,7 +6,6 @@ public class PlayerFoodOptions extends AbstractTimer implements Options {
     private boolean skipHandRaisedCheck = false;
 
     protected PlayerFoodOptions() {
-
     }
 
     @Override
@@ -22,7 +21,7 @@ public class PlayerFoodOptions extends AbstractTimer implements Options {
 
     public boolean getSkipHandRaisedCheck() {
         //trueの場合は1度目のみスキップする
-        if(skipHandRaisedCheck){
+        if (skipHandRaisedCheck) {
             skipHandRaisedCheck = false;
             return true;
         }

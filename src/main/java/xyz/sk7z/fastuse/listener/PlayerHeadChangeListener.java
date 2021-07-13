@@ -46,8 +46,6 @@ public class PlayerHeadChangeListener extends ListenerFrame {
         if (skull_Owner != null) {
             player.sendMessage(skull_Owner.toString());
         }
-
-
     }
 
     @EventHandler(priority = EventPriority.LOW)
@@ -55,7 +53,7 @@ public class PlayerHeadChangeListener extends ListenerFrame {
         Player player = event.getPlayer();
         Entity target_entity = event.getRightClicked();
         Player target_player;
-        if(player.isSneaking()){
+        if (player.isSneaking()) {
             return;
         }
         if (target_entity instanceof Player) {
@@ -67,10 +65,7 @@ public class PlayerHeadChangeListener extends ListenerFrame {
         if (player.getInventory().getItemInMainHand().getType() == Material.PLAYER_HEAD) {
             item_skull = player.getInventory().getItemInMainHand();
             playerHeadChange(item_skull, target_player);
-
         }
-
-
     }
 
     public ItemStack playerHeadChange(ItemStack item_skull, Player player) {
@@ -79,7 +74,6 @@ public class PlayerHeadChangeListener extends ListenerFrame {
         item_skull.setItemMeta(skull_meta);
 
         return item_skull;
-
     }
 
 }

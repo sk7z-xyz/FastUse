@@ -56,13 +56,12 @@ public class PlayerConfigCommand extends CommandFrame {
     @Override
     public boolean worker(CommandSender sender, String[] args) {
         if (!checkRange(sender, args, 1, 2)) return true;
-        if(!(sender instanceof Player)){
-            Utl.sendPluginMessage(plg,sender,"コンソールやブロックからは実行できません");
+        if (!(sender instanceof Player)) {
+            Utl.sendPluginMessage(plg, sender, "コンソールやブロックからは実行できません");
             return true;
         }
         Player player = (Player) sender;
         PlayerOptions options = plg.getPlayerValues(player);
-
 
 
         CommandType commandType;
@@ -138,8 +137,6 @@ public class PlayerConfigCommand extends CommandFrame {
         }
         Utl.sendPluginMessage(plg, player, "設定を変更しました" + commandType + ":" + enabled);
         return true;
-
-
     }
 
     private boolean isEnabledString(String str) {
@@ -159,9 +156,10 @@ public class PlayerConfigCommand extends CommandFrame {
 
     /**
      * コマンド別タブコンプリート処理
-     * @param sender コマンド送信者インスタンス
-     * @param cmd コマンドインスタンス
-     * @param string コマンド文字列
+     *
+     * @param sender  コマンド送信者インスタンス
+     * @param cmd     コマンドインスタンス
+     * @param string  コマンド文字列
      * @param strings パラメタ文字列配列
      * @return 保管文字列配列
      */
@@ -169,21 +167,19 @@ public class PlayerConfigCommand extends CommandFrame {
     protected List<String> getTabComplete(CommandSender sender, Command cmd, String string, String[] strings) {
         ArrayList<String> list = new ArrayList<>();
         if (strings.length == 1) {
-            for (CommandType commandType :CommandType.values()) {
+            for (CommandType commandType : CommandType.values()) {
                 if (commandType.name().toLowerCase().startsWith(strings[0].toLowerCase())) {
                     list.add(commandType.toString().toLowerCase());
                 }
             }
         } else if (strings.length == 2) {
-            if("true".startsWith(strings[1].toLowerCase())){
+            if ("true".startsWith(strings[1].toLowerCase())) {
                 list.add("true");
             }
-            if("false".startsWith(strings[1].toLowerCase())){
+            if ("false".startsWith(strings[1].toLowerCase())) {
                 list.add("false");
             }
         }
         return list;
     }
-
-
 }

@@ -23,7 +23,6 @@ public class Lag
         return ticks / (elapsed / 1000.0D);
     }
 
-
     public void run() {
         TICKS[(TICK_COUNT % TICKS.length)] = System.currentTimeMillis();
         TICK_COUNT += 1;

@@ -27,9 +27,7 @@ public class FastUse extends PluginFrame {
         PlayerEatManagerList = new HashMap<>();
         Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Lag(), 100L, 1L);
         Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new TimeSync(this), 100L, 5L);
-
     }
-
 
     @Override
     public void onDisable() {
@@ -41,16 +39,14 @@ public class FastUse extends PluginFrame {
     public void initializeConfig() {
     }
 
-
     @Override
     public void initializeCommand() {
-        CommandFrame cmd = new FastUseCommand(this,"fu");
-        cmd.addCommand(new PlayerConfigCommand(this,"conf"));
-        cmd.addCommand(new ServerStatusCommand(this,"status"));
-        cmd.addCommand(new TimeSyncCommand(this,"timesync"));
+        CommandFrame cmd = new FastUseCommand(this, "fu");
+        cmd.addCommand(new PlayerConfigCommand(this, "conf"));
+        cmd.addCommand(new ServerStatusCommand(this, "status"));
+        cmd.addCommand(new TimeSyncCommand(this, "timesync"));
         registerPluginCommand(cmd);
     }
-
 
     @Override
     public void initializeListener() {
@@ -62,10 +58,7 @@ public class FastUse extends PluginFrame {
         registerPluginListener(new GlideListener(this, "player"));
         registerPluginListener(new PlayerHeadChangeListener(this, "player"));
         registerPluginListener(new ChairListener(this, "player"));
-
-
     }
-
 
     public PlayerOptions getPlayerValues(Player player) {
         if (!playerValuesList.containsKey(player.getUniqueId())) {
@@ -80,8 +73,6 @@ public class FastUse extends PluginFrame {
         }
         return PlayerEatManagerList.get(player.getUniqueId());
     }
-
-
 }
 
 
