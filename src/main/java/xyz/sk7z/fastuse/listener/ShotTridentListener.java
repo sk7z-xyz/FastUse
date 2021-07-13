@@ -2,8 +2,8 @@ package xyz.sk7z.fastuse.listener;
 
 import jp.minecraftuser.ecoframework.ListenerFrame;
 import jp.minecraftuser.ecoframework.PluginFrame;
-import net.minecraft.server.v1_15_R1.ItemTrident;
-import org.bukkit.craftbukkit.v1_15_R1.inventory.CraftItemStack;
+import net.minecraft.world.item.ItemTrident;
+import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -62,7 +62,7 @@ public class ShotTridentListener extends ListenerFrame {
         /*
         if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
             AbstractPlayerShotOptions shotValues = plg.getPlayerValues(player).getPlayerShotTridentOptions();
-            net.minecraft.server.v1_15_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(usedItem);
+            net.minecraft.server.v1_17_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(usedItem);
             if (usedItem != null && isTrident(usedItem)) {
                 if (nmsItemStack.getItem() instanceof ItemTrident) {
 

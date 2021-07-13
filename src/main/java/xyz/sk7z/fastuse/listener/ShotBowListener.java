@@ -2,10 +2,10 @@ package xyz.sk7z.fastuse.listener;
 
 import jp.minecraftuser.ecoframework.ListenerFrame;
 import jp.minecraftuser.ecoframework.PluginFrame;
-import net.minecraft.server.v1_15_R1.ItemBow;
-import org.bukkit.craftbukkit.v1_15_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_15_R1.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_15_R1.inventory.CraftItemStack;
+import net.minecraft.world.item.ItemBow;
+import org.bukkit.craftbukkit.v1_17_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -72,7 +72,7 @@ public class ShotBowListener extends ListenerFrame {
         }
 
         //spigotのItemStackをNMS(net.minecraft.server)ItemStackに変換する
-        net.minecraft.server.v1_15_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(usedItem);
+        net.minecraft.world.item.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(usedItem);
 
 
         if (usedItem != null && isBow(usedItem)) {

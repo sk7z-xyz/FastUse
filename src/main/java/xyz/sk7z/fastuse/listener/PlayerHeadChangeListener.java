@@ -2,10 +2,10 @@ package xyz.sk7z.fastuse.listener;
 
 import jp.minecraftuser.ecoframework.ListenerFrame;
 import jp.minecraftuser.ecoframework.PluginFrame;
-import net.minecraft.server.v1_15_R1.NBTBase;
+import net.minecraft.nbt.NBTBase;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.v1_15_R1.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -41,7 +41,7 @@ public class PlayerHeadChangeListener extends ListenerFrame {
             return;
         }
         event.setCancelled(true);
-        net.minecraft.server.v1_15_R1.ItemStack nms_item_skull = CraftItemStack.asNMSCopy(item_skull);
+        net.minecraft.world.item.ItemStack nms_item_skull = CraftItemStack.asNMSCopy(item_skull);
         NBTBase skull_Owner = nms_item_skull.getTag() != null ? nms_item_skull.getTag().get("SkullOwner") : null;
         if (skull_Owner != null) {
             player.sendMessage(skull_Owner.toString());

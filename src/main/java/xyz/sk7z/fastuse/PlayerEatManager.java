@@ -1,10 +1,10 @@
 package xyz.sk7z.fastuse;
 
-import net.minecraft.server.v1_15_R1.EntityLiving;
-import net.minecraft.server.v1_15_R1.Item;
+import net.minecraft.world.entity.EntityLiving;
+import net.minecraft.world.item.Item;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_15_R1.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_15_R1.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -112,7 +112,7 @@ class PlayerEatScheduler extends BukkitRunnable {
             }
             if (FastUseUtils.canPlayerEatTime(player)) {
                 //Utl.sendPluginMessage(plg, player,"Player can eat");
-                net.minecraft.server.v1_15_R1.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(usedItem);
+                net.minecraft.world.item.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(usedItem);
                 Item nmsItemFood = nmsItemStack.getItem();
                 //Itemクラスのaメソッドを参照して食べる｡
                 nmsItemFood.a(nmsItemStack, craftPlayer.getHandle().getWorld(), craftPlayer.getHandle());

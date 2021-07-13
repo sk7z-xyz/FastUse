@@ -1,12 +1,15 @@
 package xyz.sk7z.fastuse;
 
-import net.minecraft.server.v1_15_R1.*;
+import net.minecraft.world.item.ItemLingeringPotion;
+import net.minecraft.world.item.ItemPotion;
+import net.minecraft.world.item.ItemSplashPotion;
+import net.minecraft.world.level.block.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
-import org.bukkit.craftbukkit.v1_15_R1.block.CraftBlock;
-import org.bukkit.craftbukkit.v1_15_R1.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_17_R1.block.CraftBlock;
+import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import xyz.sk7z.fastuse.player_options.PlayerFoodOptions;
@@ -15,11 +18,11 @@ public class FastUseUtils {
     public static FastUse plugin;
 
     public static boolean isPlaceFoodSeed(ItemStack item, Block clickedBlock) {
-        if(item == null || clickedBlock == null){
+        if (item == null || clickedBlock == null) {
             return false;
         }
         if (item.getType() == Material.SWEET_BERRIES) {
-            switch (clickedBlock.getType()){
+            switch (clickedBlock.getType()) {
                 case GRASS_BLOCK:
                 case DIRT:
                 case PODZOL:
@@ -35,9 +38,9 @@ public class FastUseUtils {
         return false;
     }
 
-    public static boolean isFood(ItemStack item) {
-        net.minecraft.server.v1_15_R1.ItemStack itemStack = CraftItemStack.asNMSCopy(item);
-        return itemStack.getItem().isFood();
+    public static boolean isFood(ItemStack itemStack) {
+        net.minecraft.world.item.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
+        return nmsItemStack.getItem().isFood();
     }
     public static boolean isFoodSoup(ItemStack item) {
         switch (item.getType()) {
@@ -51,11 +54,11 @@ public class FastUseUtils {
     }
 
     public static boolean isDrink(ItemStack item) {
-        net.minecraft.server.v1_15_R1.ItemStack itemStack = CraftItemStack.asNMSCopy(item);
+        net.minecraft.world.item.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(item);
 
-        if (itemStack.getItem() instanceof ItemPotion) {
+        if (nmsItemStack.getItem() instanceof ItemPotion) {
             //スプラッシュポーションと残留ポーションはfalse
-            return !(itemStack.getItem() instanceof ItemLingeringPotion) && !(itemStack.getItem() instanceof ItemSplashPotion);
+            return !(nmsItemStack.getItem() instanceof ItemLingeringPotion) && !(nmsItemStack.getItem() instanceof ItemSplashPotion);
         } else {
             return false;
         }
@@ -102,7 +105,7 @@ public class FastUseUtils {
 
 
     public static boolean isCanRightClockBlock(Block block) {
-        net.minecraft.server.v1_15_R1.Block nmsBlock = ((CraftBlock) block).getNMS().getBlock();
+        net.minecraft.world.level.block.Block nmsBlock = ((CraftBlock) block).getNMS().getBlock();
         return
                 //GUI開く系
                 nmsBlock instanceof BlockChest ||
@@ -120,21 +123,20 @@ public class FastUseUtils {
                         nmsBlock instanceof BlockDaylightDetector ||
                         nmsBlock instanceof BlockButtonAbstract ||
                         nmsBlock instanceof BlockLever ||
-                        //何かを開く京
+                        //何かを開く系
                         nmsBlock instanceof BlockFenceGate ||
                         nmsBlock instanceof BlockDoor ||
                         nmsBlock instanceof BlockTrapdoor ||
                         //その他
                         nmsBlock instanceof BlockBed ||
-                        //nmsBlock instanceof BlockJukeBox || NG
                         nmsBlock instanceof BlockNote;
 
 
     }
 
     public static boolean isChairBlock(Block block) {
-        net.minecraft.server.v1_15_R1.Block nmsBlock = ((CraftBlock) block).getNMS().getBlock();
-        if(nmsBlock instanceof BlockStairs){
+        net.minecraft.world.level.block.Block nmsBlock = ((CraftBlock) block).getNMS().getBlock();
+        if (nmsBlock instanceof BlockStairs) {
             String dataStr = "[half=bottom]";
             BlockData data = Bukkit.createBlockData(block.getType(), dataStr);
             return block.getBlockData().matches(data);
