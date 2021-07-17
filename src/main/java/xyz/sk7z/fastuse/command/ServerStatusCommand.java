@@ -96,7 +96,7 @@ public class ServerStatusCommand extends CommandFrame {
                     }
                 }
                 String format = "%-15s: [%-13s:%4d,%4d] Entities:%d";
-                Utl.sendPluginMessage(plg, player, String.format(format, player.getName(), player.getWorld().getName(), loc.getBlockX(), loc.getBlockZ(), entity_count));
+                Utl.sendPluginMessage(plg, sender, String.format(format, player.getName(), player.getWorld().getName(), loc.getBlockX(), loc.getBlockZ(), entity_count));
             }
         }
 
