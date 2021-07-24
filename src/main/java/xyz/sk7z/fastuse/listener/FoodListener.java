@@ -3,6 +3,7 @@ package xyz.sk7z.fastuse.listener;
 import jp.minecraftuser.ecoframework.ListenerFrame;
 import jp.minecraftuser.ecoframework.PluginFrame;
 import net.minecraft.server.v1_15_R1.FoodInfo;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_15_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
@@ -12,6 +13,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.MainHand;
 import org.bukkit.scheduler.BukkitRunnable;
 import xyz.sk7z.fastuse.FastUse;
 import xyz.sk7z.fastuse.FastUseUtils;
@@ -72,11 +74,10 @@ public class FoodListener extends ListenerFrame {
                     return;
                 }
                 //吐き出せるほど食料ゲージが溜まっているかチェックして､吐けない場合はFastUseの機能で食べさせる｡
-                if(!checkVomiting(player,useItem)){
+                if (!checkVomiting(player, useItem)) {
                     event.setCancelled(true);
                     return;
                 }
-
                 //満腹度を減らしてから食べる(無限むしゃむしゃ対策)
                 vomiting(player, useItem);
                 //次のTickで食べたアイテム返却(同じTickでアイテムをいじると同期が不正になる為)
@@ -110,18 +111,45 @@ public class FoodListener extends ListenerFrame {
     class UndoItem extends BukkitRunnable {
         Player player;
         ItemStack itemStack;
+        MainHand hand;
 
         UndoItem(Player p, ItemStack it) {
             player = p;
             itemStack = it.clone();
-            itemStack.setAmount(1);
+            hand = FastUseUtils.getUseHand(player, itemStack);
         }
 
         @Override
         public void run() {
             //念の為チェック
-            if(FastUseUtils.isFood(itemStack)) {
-                player.getInventory().addItem(itemStack);
+            if (FastUseUtils.isFood(itemStack)) {
+                ItemStack handItem;
+                //使用していたハンドのアイテムを取得
+                if (hand == MainHand.RIGHT) {
+                    handItem = player.getInventory().getItemInMainHand();
+                } else {
+                    handItem = player.getInventory().getItemInOffHand();
+                }
+                //使用していたハンドのアイテムが変更されていないなら
+                if (itemStack.getType() == handItem.getType()) {
+                    //ハンドのアイテム数を+1する
+                    handItem.setAmount(handItem.getAmount() + 1);
+                } else {
+                    ItemStack addItem = itemStack.clone();
+                    addItem.setAmount(1);
+                    //ハンドが空になっていたら 再度アイテムを設定する
+                    if(handItem.getType() == Material.AIR){
+                        if (hand == MainHand.RIGHT) {
+                            player.getInventory().setItemInMainHand(addItem);
+                        } else {
+                            player.getInventory().setItemInOffHand(addItem);
+                        }
+                    }else{
+                        //上記以外ならaddItemで渡す
+                        player.getInventory().addItem(addItem);
+                    }
+
+                }
             }
         }
     }
