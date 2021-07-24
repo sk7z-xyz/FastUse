@@ -26,7 +26,8 @@ public class FastUse extends PluginFrame {
         playerValuesList = new HashMap<>();
         PlayerEatManagerList = new HashMap<>();
         Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Lag(), 100L, 1L);
-        Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new TimeSync(this), 100L, 5L);
+        //レモン鯖向けカスタマイズ(使わない)
+        //Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new TimeSync(this), 100L, 5L);
     }
 
     @Override

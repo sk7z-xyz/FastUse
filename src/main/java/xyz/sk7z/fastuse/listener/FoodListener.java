@@ -28,8 +28,10 @@ public class FoodListener extends ListenerFrame {
         super(plg_, name_);
         this.plg = (FastUse) plg_;
     }
-
-    @EventHandler(priority = EventPriority.LOW)
+    //レモン鯖用カスタマイズ
+    // FortuneCookie(priority Normal)の満腹度を減少を処理を先に行うために
+    // こちらのpriorityをHighに変更
+    @EventHandler(priority = EventPriority.HIGH)
     public void PlayerInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
         PlayerFoodOptions playerFoodOptions = plg.getPlayerValues(player).getPlayerFoodOptions();
