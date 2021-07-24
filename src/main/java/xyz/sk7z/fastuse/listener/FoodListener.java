@@ -65,6 +65,10 @@ public class FoodListener extends ListenerFrame {
                 //アイテムが1つの場合FastUseの機能で食べれなくなってしまうためイベントをキャンセルする
                 if (useItem.getAmount() <= 1) {
                     event.setCancelled(true);
+                    //イベントをキャンセルした場合､Raised状態が解除されてしまう
+                    //20TPS出ている場合では こちらのイベントが先に呼ばれ その後FastUseの機能が呼ばれる場合があるため
+                    //チェックスキップフラグを有効にする
+                    playerFoodOptions.setSkipHandRaisedCheck();
                     return;
                 }
                 //吐き出せるほど食料ゲージが溜まっているかチェックして､吐けない場合はFastUseの機能で食べさせる｡
