@@ -12,6 +12,7 @@ import org.bukkit.craftbukkit.v1_17_R1.block.CraftBlock;
 import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.MainHand;
 import xyz.sk7z.fastuse.player_options.PlayerFoodOptions;
 
 public class FastUseUtils {
@@ -142,5 +143,16 @@ public class FastUseUtils {
             return block.getBlockData().matches(data);
         }
         return false;
+
+    }
+
+    public static MainHand getUseHand(Player player, ItemStack it){
+        ItemStack itemStack;
+        itemStack = player.getInventory().getItemInMainHand();
+        if (itemStack.equals(it)) {
+            return MainHand.RIGHT;
+        }else {
+            return MainHand.LEFT;
+        }
     }
 }
