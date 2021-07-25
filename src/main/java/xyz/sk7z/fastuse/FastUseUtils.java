@@ -153,4 +153,11 @@ public class FastUseUtils {
             return MainHand.LEFT;
         }
     }
+    public static boolean isSameItem(ItemStack itemStack_1,ItemStack itemStack_2){
+        if(itemStack_1 == null || itemStack_2 == null){
+            return false;
+        }
+        return  itemStack_1.getType() == itemStack_2.getType();
+
+    }
 }
