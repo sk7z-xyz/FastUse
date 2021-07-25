@@ -62,16 +62,19 @@ public class FoodListener extends ListenerFrame {
 
         Player player = event.getPlayer();
         ItemStack useItem = event.getItem();
+        ItemStack fastUseEatItem = plg.getPlayerEatManager(player).getEatItem();
         PlayerFoodOptions playerFoodOptions = plg.getPlayerValues(player).getPlayerFoodOptions();
         if (playerFoodOptions.isEnabled()) {
             if (FastUseUtils.isFood(useItem)) {
 
                 //アイテムが1つの場合FastUseの機能で食べれなくなってしまうためイベントをキャンセルする
-                if (useItem.getAmount() <= 1) {
-                    event.setCancelled(true);
+                //FastUseで食事中のアイテムとイベントのアイテムが異なる場合は処理を続行する｡
+                if (useItem.getAmount() <= 1 &&
+                        FastUseUtils.isSameItem(useItem,fastUseEatItem)){;
                     //イベントをキャンセルした場合､Raised状態が解除されてしまう
                     //20TPS出ている場合では こちらのイベントが先に呼ばれ その後FastUseの機能が呼ばれる場合があるため
                     //チェックスキップフラグを有効にする
+                    event.setCancelled(true);
                     playerFoodOptions.setSkipHandRaisedCheck();
                     return;
                 }
@@ -80,11 +83,13 @@ public class FoodListener extends ListenerFrame {
                     event.setCancelled(true);
                     return;
                 }
-                //無限むしゃむしゃ対策
-                //食料ゲージ分満腹度を減らす->バニラの機能で食べさせる->1Tick後に食べたアイテムを返却する
-                vomiting(player, useItem);
-                //次のTickで食べたアイテム返却(同じTickでアイテムをいじると同期が不正になる為)
-                (new UndoItem(player, useItem)).runTaskLater(plg, 1);
+                //FastUseで食事中のアイテムと同一なら吐き出して食べる
+                if(FastUseUtils.isSameItem(useItem,fastUseEatItem)) {
+                    //満腹度を減らしてから食べる(無限むしゃむしゃ対策)
+                    vomiting(player, useItem);
+                    //次のTickで食べたアイテム返却(同じTickでアイテムをいじると同期が不正になる為)
+                    (new UndoItem(player, useItem)).runTaskLater(plg, 1);
+                }
                 playerFoodOptions.setSkipHandRaisedCheck();
             }
         }
