@@ -26,6 +26,10 @@ public class PlayerEatManager {
         this.player_uuid = player.getUniqueId();
     }
 
+    public ItemStack getEatItem(){
+        return this.itemStack;
+    }
+
     //食事を開始する
     public void EatStart() {
         //Utl.sendPluginMessage(plg, player,"Eat Start");
