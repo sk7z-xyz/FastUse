@@ -2,8 +2,10 @@ package xyz.sk7z.fastuse.listener;
 
 import jp.minecraftuser.ecoframework.ListenerFrame;
 import jp.minecraftuser.ecoframework.PluginFrame;
+import net.minecraft.world.level.block.CarpetBlock;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
+import org.bukkit.craftbukkit.v1_17_R1.block.CraftBlock;
 import org.bukkit.craftbukkit.v1_17_R1.entity.CraftArrow;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
@@ -35,6 +37,7 @@ public class ChairListener extends ListenerFrame {
         Player player = event.getPlayer();
         ItemStack usedItem = event.getItem();
         Block clickedBlock = event.getClickedBlock();
+        double y = 0;
 
         //右クリック以外は無視
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK) {
@@ -44,11 +47,23 @@ public class ChairListener extends ListenerFrame {
             return;
         }
 
-        if (clickedBlock == null || !FastUseUtils.isChairBlock(clickedBlock)) {
+        if (clickedBlock == null) {
+            return;
+        }
+
+        if (FastUseUtils.isChairBlock(clickedBlock)) {
+            y = 0;
+            //レモン鯖向けカスタマイズ カーペットに座る
+        } else if (((CraftBlock) clickedBlock).getNMS().getBlock() instanceof CarpetBlock){
+            y = -0.5;
+        }else{
             return;
         }
 
         Location loc = clickedBlock.getLocation().setDirection(player.getLocation().getDirection()).add(new Vector(0.5, 0, 0.5));
+
+        loc.setY(loc.getY() + y);
+
         for (Entity entity : loc.getWorld().getNearbyEntities(loc, 0.1, 0.1, 0.1)) {
             if (entity instanceof CraftArrow) {
                 if ((entity).getPassengers().size() > 0) {
