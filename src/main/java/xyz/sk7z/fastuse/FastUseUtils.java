@@ -102,7 +102,9 @@ public class FastUseUtils {
             playerFoodOptions.setEndTime();
             return false;
         }
-        return playerFoodOptions.getElapsedTimeMillis() >= 1.6 * 1000;
+        //れもん鯖向けカスタマイズ 20TPS以上出ている場合､食事ができなくなるバグの回避のため
+        //食事完了条件を1.6->1.4秒に変更
+        return playerFoodOptions.getElapsedTimeMillis() >= 1.4 * 1000;
     }
 
     public static boolean isCanRightClockBlock(Block block) {
