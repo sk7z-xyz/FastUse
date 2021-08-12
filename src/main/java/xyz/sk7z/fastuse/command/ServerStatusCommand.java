@@ -76,22 +76,20 @@ public class ServerStatusCommand extends CommandFrame {
                 int entity_count = 0;
                 World world = player.getWorld();
                 Location loc = player.getLocation();
-                String[] target_worlds = {"home01", "home02", "world", "world_the_end", "pvp01"};
-                if (Arrays.asList(target_worlds).contains(world.getName())) {
-                    List<Chunk> loadingChunkList = Arrays.asList(world.getLoadedChunks());
-                    for (int i = -viewDistance; i <= viewDistance; i++) {
-                        for (int j = -viewDistance; j <= viewDistance; j++) {
-                            Location target_loc = loc.clone();
-                            target_loc.add(i * 16, 0, j * 16);
-                            Chunk chunk = world.getChunkAt(target_loc);
-                            if (loadingChunkList.contains(chunk)) {
-                                entity_count += Arrays.stream(chunk.getEntities()).filter(entity -> entity instanceof LivingEntity).count();
-                            }
-                            //1000ミリ秒経過した場合はキャンセルする
-                            if ((System.nanoTime() - start_time) / 1000 / 1000 >= 1000) {
-                                Utl.sendPluginMessage(plg, sender, "TimeOutしました");
-                                break playerSearch;
-                            }
+
+                List<Chunk> loadingChunkList = Arrays.asList(world.getLoadedChunks());
+                for (int i = -viewDistance; i <= viewDistance; i++) {
+                    for (int j = -viewDistance; j <= viewDistance; j++) {
+                        Location target_loc = loc.clone();
+                        target_loc.add(i * 16, 0, j * 16);
+                        Chunk chunk = world.getChunkAt(target_loc);
+                        if (loadingChunkList.contains(chunk)) {
+                            entity_count += Arrays.stream(chunk.getEntities()).filter(entity -> entity instanceof LivingEntity).count();
+                        }
+                        //1000ミリ秒経過した場合はキャンセルする
+                        if ((System.nanoTime() - start_time) / 1000 / 1000 >= 1000) {
+                            Utl.sendPluginMessage(plg, sender, "TimeOutしました");
+                            break playerSearch;
                         }
                     }
                 }
